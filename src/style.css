@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root { font-family: 'DM Sans', sans-serif; color: #171723; background: #f8f8fc; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+.demo { width: min(1060px, calc(100% - 40px)); margin: 0 auto; }
+.demo-header { height: 78px; display: flex; align-items: center; gap: 11px; border-bottom: 1px solid #e9e9ef; color: #5f5c78; font: 500 11px 'DM Mono', monospace; letter-spacing: .08em; }
+.mark { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 8px; color: white; background: #6a5df0; font: 700 10px 'Space Grotesk', sans-serif; letter-spacing: -.06em; }
+.badge { margin-left: auto; padding: 5px 8px; color: #6156d8; border: 1px solid #d9d5ff; border-radius: 5px; background: #f2f0ff; font-size: 9px; }
+.hero { padding: 72px 0 35px; }
+.eyebrow { color: #6a5df0; font: 500 11px 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .1em; }
+h1 { margin: 16px 0 17px; color: #202033; font: 600 clamp(42px, 6vw, 66px)/1.04 'Space Grotesk', sans-serif; letter-spacing: -.055em; }
+.hero p { max-width: 520px; margin: 0; color: #717183; font-size: 15px; line-height: 1.7; }
+.hint { display: inline-flex; align-items: center; gap: 8px; margin-top: 21px; padding: 9px 12px; border: 1px solid #e6e5ef; border-radius: 8px; color: #656579; font-size: 11px; }
+.hint-dot { width: 7px; height: 7px; border-radius: 50%; background: #71c59c; box-shadow: 0 0 0 3px #71c59c22; }
+.preview { overflow: hidden; border: 1px solid #e2e2ea; border-radius: 14px; background: white; box-shadow: 0 18px 60px #22223d0b; }
+.window-bar { height: 41px; display: flex; align-items: center; gap: 6px; padding: 0 14px; background: #fbfbfd; border-bottom: 1px solid #eeeeF2; }
+.window-bar > span { width: 7px; height: 7px; border-radius: 50%; background: #e2e1e8; }
+.window-bar > div { margin: auto; margin-left: calc(50% - 61px); padding: 5px 20px; border-radius: 5px; background: #f2f2f6; color: #9a99a8; font: 9px 'DM Mono', monospace; }
+.app-frame { min-height: 310px; display: flex; background: #fff; }
+aside { width: 162px; flex: 0 0 162px; padding: 16px 12px; border-right: 1px solid #f0f0f4; }
+.app-logo { margin: 2px 9px 20px; font: 700 22px 'Space Grotesk', sans-serif; letter-spacing: -.08em; }.app-logo span { color: #6a5df0; }
+.nav { margin: 3px 0; padding: 10px 9px; border-radius: 6px; color: #9291a1; font-size: 12px; }.nav small { margin-left: 9px; font-size: 10px; }.nav.active { color: #6659e8; background: #f3f1ff; }
+.avatar { width: 26px; height: 26px; display: grid; place-items: center; margin: 38px 9px 0; border-radius: 50%; background: #f6e6dc; color: #9b664a; font-size: 10px; }
+.app-content { flex: 1; padding: 23px 26px 25px; }.app-top { display: flex; justify-content: space-between; color: #9a99a8; font-size: 9px; }.app-top span:last-child { color: #777688; }
+.app-content h2 { margin: 28px 0 4px; color: #272738; font: 600 20px 'Space Grotesk', sans-serif; letter-spacing: -.035em; }.app-content h2 span { color: #efb25b; font-size: 15px; }
+.app-content > p { margin: 0; color: #9897a7; font-size: 10px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+.stats article { display: flex; flex-direction: column; padding: 12px; border: 1px solid #eeeef3; border-radius: 8px; }.stats label { color: #9998a7; font: 8px 'DM Mono', monospace; }.stats strong { margin-top: 9px; color: #303042; font: 600 20px 'Space Grotesk', sans-serif; }.stats em { margin-top: 4px; color: #5aa37c; font-size: 8px; font-style: normal; }
+.chart { margin-top: 13px; padding: 11px 12px 7px; border: 1px solid #eeeef3; border-radius: 8px; }.chart > div:first-child { display: flex; justify-content: space-between; color: #888797; font-size: 9px; }.chart b { color: #414153; }.bars { height: 48px; display: flex; align-items: end; gap: 7px; padding-top: 7px; }.bars i { flex: 1; border-radius: 3px 3px 0 0; background: linear-gradient(#9b91ff,#d5d1ff); }
+footer { padding: 23px 0 32px; text-align: center; color: #a09faf; font-size: 10px; }
+@media (max-width: 600px) { .hero { padding-top: 54px; } aside { width: 48px; flex-basis: 48px; padding: 14px 7px; }.app-logo { margin: 4px 5px 20px; }.nav { text-align: center; padding: 9px 0; }.nav small { display: none; }.avatar { margin: 38px 3px 0; }.app-content { padding: 18px 12px; }.stats { gap: 6px; }.stats article { padding: 8px 6px; }.stats label { font-size: 6px; }.stats strong { font-size: 17px; }.stats em { font-size: 7px; } }

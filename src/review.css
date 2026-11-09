@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root { font-family: 'DM Sans', sans-serif; color: #202033; background: #f8f8fc; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.inbox { width: min(900px, calc(100% - 32px)); margin: 0 auto; padding: 52px 0; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 24px; border-bottom: 1px solid #e8e8ef; }
+.eyebrow { color: #6a5df0; font: 500 10px 'DM Mono', monospace; letter-spacing: .08em; }
+h1 { margin: 9px 0 4px; font: 600 34px 'Space Grotesk', sans-serif; letter-spacing: -.04em; }
+header p { margin: 0; color: #818092; font-size: 13px; }
+button { border: 0; border-radius: 8px; padding: 10px 13px; background: #6758ef; color: white; font: 600 12px 'DM Sans', sans-serif; cursor: pointer; }
+form { display: flex; align-items: center; gap: 10px; margin: 22px 0 14px; }
+label { color: #717183; font-size: 12px; }
+input { width: min(360px, 50vw); padding: 10px; border: 1px solid #dedde8; border-radius: 8px; font: 12px 'DM Sans', sans-serif; }
+#status { margin: 15px 0; color: #818092; font-size: 12px; }
+.report { margin: 14px 0; overflow: hidden; display: grid; grid-template-columns: minmax(220px, 42%) 1fr; border: 1px solid #e8e8ef; border-radius: 12px; background: white; }
+.report img { display: block; width: 100%; height: 100%; min-height: 180px; max-height: 310px; object-fit: cover; object-position: top; background: #f1f0f6; }
+.detail { display: flex; flex-direction: column; align-items: start; padding: 17px; }
+.report-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; width: 100%; }
+.report-heading strong { font-size: 13px; }.report-heading time { color: #9796a6; font-size: 10px; text-align: right; }
+.detail p { flex: 1; margin: 20px 0; color: #555568; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
+.detail a { max-width: 100%; overflow: hidden; color: #6556e8; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.detail small { overflow: hidden; max-width: 100%; margin-top: 8px; color: #aaa9b5; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 620px) { .report { grid-template-columns: 1fr; }.report img { max-height: 220px; }.inbox { padding-top: 30px; } form { align-items: stretch; flex-direction: column; } input { width: 100%; } }

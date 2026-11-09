@@ -1,0 +1,33 @@
+{
+  "name": "feedback-fab",
+  "version": "0.1.0",
+  "description": "A tiny feedback widget for web apps that captures a screenshot and optional tester comments.",
+  "type": "module",
+  "main": "./dist-sdk/feedback-fab.umd.js",
+  "module": "./dist-sdk/feedback-fab.es.js",
+  "types": "./dist-sdk/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist-sdk/types/index.d.ts",
+      "import": "./dist-sdk/feedback-fab.es.js",
+      "require": "./dist-sdk/feedback-fab.umd.js"
+    }
+  },
+  "license": "MIT",
+  "sideEffects": false,
+  "files": ["dist-sdk", "README.md", "LICENSE"],
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -p tsconfig.json && vite build --config vite.sdk.config.ts && vite build --config vite.demo.config.ts",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "html2canvas": "^1.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}
