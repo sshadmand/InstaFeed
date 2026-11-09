@@ -87,7 +87,9 @@ export class FeedbackFab {
 
   private async capture() {
     const fabButton = this.root.querySelector<HTMLButtonElement>(".fab")!;
+    const noteButton = this.root.querySelector<HTMLButtonElement>(".note-button")!;
     fabButton.disabled = true;
+    noteButton.disabled = true;
     try {
       const canvas = await html2canvas(this.options.capture?.() ?? document.documentElement, {
         useCORS: true, allowTaint: false, scale: Math.min(window.devicePixelRatio || 1, 1.5),
@@ -99,6 +101,7 @@ export class FeedbackFab {
       this.setMessage("Sending screenshot…");
       await this.uploadScreenshot();
       this.setMessage("Screenshot sent. Add a comment?");
+      noteButton.disabled = false;
     } catch (error) {
       this.options.onError?.(asError(error));
       this.setMessage("Could not send feedback. Try again.");

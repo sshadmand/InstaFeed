@@ -6,7 +6,7 @@ export default defineConfig({
       entry: "src/index.ts",
       name: "FeedbackFab",
       formats: ["es", "umd"],
-      fileName: (format) => `feedback-fab.${format}.js`,
+      fileName: (format) => format === "umd" ? "feedback-fab.umd.cjs" : "feedback-fab.es.js",
     },
     outDir: "dist-sdk",
     emptyOutDir: true,

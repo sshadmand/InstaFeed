@@ -4925,19 +4925,19 @@ class VQ {
     }), this.root.querySelector(".dismiss").addEventListener("click", () => this.reset()), this.root.querySelector(".send").addEventListener("click", () => void this.submit());
   }
   async capture() {
-    var t, r, B, n;
-    const A = this.root.querySelector(".fab");
-    A.disabled = !0;
+    var r, B, n, s;
+    const A = this.root.querySelector(".fab"), t = this.root.querySelector(".note-button");
+    A.disabled = !0, t.disabled = !0;
     try {
-      const s = await OQ(((r = (t = this.options).capture) == null ? void 0 : r.call(t)) ?? document.documentElement, {
+      const a = await OQ(((B = (r = this.options).capture) == null ? void 0 : B.call(r)) ?? document.documentElement, {
         useCORS: !0,
         allowTaint: !1,
         scale: Math.min(window.devicePixelRatio || 1, 1.5),
-        ignoreElements: (a) => a.hasAttribute("data-feedback-fab")
+        ignoreElements: (i) => i.hasAttribute("data-feedback-fab")
       });
-      this.screenshot = await new Promise((a, i) => s.toBlob((o) => o ? a(o) : i(new Error("Could not encode screenshot.")), "image/jpeg", 0.72)), this.root.querySelector(".card").classList.add("visible"), this.root.querySelector(".entry").classList.remove("open"), this.setMessage("Sending screenshot…"), await this.uploadScreenshot(), this.setMessage("Screenshot sent. Add a comment?");
-    } catch (s) {
-      (n = (B = this.options).onError) == null || n.call(B, Lr(s)), this.setMessage("Could not send feedback. Try again."), this.root.querySelector(".card").classList.add("visible");
+      this.screenshot = await new Promise((i, o) => a.toBlob((Q) => Q ? i(Q) : o(new Error("Could not encode screenshot.")), "image/jpeg", 0.72)), this.root.querySelector(".card").classList.add("visible"), this.root.querySelector(".entry").classList.remove("open"), this.setMessage("Sending screenshot…"), await this.uploadScreenshot(), this.setMessage("Screenshot sent. Add a comment?"), t.disabled = !1;
+    } catch (a) {
+      (s = (n = this.options).onError) == null || s.call(n, Lr(a)), this.setMessage("Could not send feedback. Try again."), this.root.querySelector(".card").classList.add("visible");
     } finally {
       A.disabled = !1;
     }

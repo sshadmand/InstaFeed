@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "description": "A tiny feedback widget for web apps that captures a screenshot and optional tester comments.",
   "type": "module",
-  "main": "./dist-sdk/feedback-fab.umd.js",
+  "main": "./dist-sdk/feedback-fab.umd.cjs",
   "module": "./dist-sdk/feedback-fab.es.js",
   "types": "./dist-sdk/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist-sdk/types/index.d.ts",
       "import": "./dist-sdk/feedback-fab.es.js",
-      "require": "./dist-sdk/feedback-fab.umd.js"
+      "require": "./dist-sdk/feedback-fab.umd.cjs"
     }
   },
   "license": "MIT",
