@@ -26,12 +26,18 @@ async function handler(request: Request): Promise<Response> {
       page_title text NOT NULL DEFAULT '',
       comment text NOT NULL DEFAULT '',
       screenshot_data_url text NOT NULL,
-      user_agent text NOT NULL DEFAULT ''
+      user_agent text NOT NULL DEFAULT '',
+      reaction text CHECK (reaction IN ('up', 'down'))
     )`;
+    await sql`ALTER TABLE feedback_submissions ADD COLUMN IF NOT EXISTS reaction text CHECK (reaction IN ('up', 'down'))`;
 
     if (request.method === "POST") {
       const form = await request.formData();
       const screenshot = form.get("screenshot");
+      const reaction = form.get("reaction");
+      if (reaction !== null && reaction !== "up" && reaction !== "down") {
+        return json({ error: "Reaction must be up or down." }, 400, headers);
+      }
       const comment = String(form.get("comment") ?? "").trim().slice(0, 4000);
       const url = String(form.get("url") ?? "").slice(0, 2048);
       if (!(screenshot instanceof File) || !screenshot.type.startsWith("image/") || screenshot.size > MAX_SCREENSHOT_BYTES) {
@@ -46,10 +52,10 @@ async function handler(request: Request): Promise<Response> {
       const title = String(form.get("title") ?? "").slice(0, 300);
       const userAgent = String(form.get("userAgent") ?? "").slice(0, 512);
       const rows = await sql`
-        INSERT INTO feedback_submissions (app_name, page_url, page_title, comment, screenshot_data_url, user_agent)
-        VALUES (${appName}, ${pageUrl}, ${title}, ${comment}, ${dataUrl}, ${userAgent})
+        INSERT INTO feedback_submissions (app_name, page_url, page_title, comment, screenshot_data_url, user_agent, reaction)
+        VALUES (${appName}, ${pageUrl}, ${title}, ${comment}, ${dataUrl}, ${userAgent}, ${reaction})
         RETURNING id, created_at`;
-      return json({ id: rows[0].id, createdAt: rows[0].created_at }, 201, headers);
+      return json({ id: rows[0].id, createdAt: rows[0].created_at, reaction }, 201, headers);
     }
 
     if (request.method === "PATCH") {
@@ -68,7 +74,7 @@ async function handler(request: Request): Promise<Response> {
       if (request.headers.get("authorization") !== `Bearer ${token}`) return json({ error: "Unauthorized." }, 401, headers);
       const rows = await sql`
         SELECT id, created_at AS "createdAt", app_name AS "appName", page_url AS url,
-          page_title AS title, comment, screenshot_data_url AS screenshot_data, user_agent AS "userAgent"
+          page_title AS title, comment, screenshot_data_url AS screenshot_data, user_agent AS "userAgent", reaction
         FROM feedback_submissions ORDER BY created_at DESC LIMIT 200`;
       return json({ feedback: rows }, 200, headers);
     }

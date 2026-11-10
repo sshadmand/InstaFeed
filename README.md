@@ -1,6 +1,6 @@
 # InstaFeed · Feedback Fab SDK
 
-An open-source feedback widget for web apps. A tester clicks the floating down-thumb, the widget captures the page, then offers an optional comment. The report and screenshot are stored together in Postgres for your team to review.
+An open-source feedback widget for web apps. The floating button shows overlapping thumbs. Hover or tap to reveal separate thumbs-up and thumbs-down buttons; choosing one captures the page and offers an optional comment. The report and screenshot are stored together in Postgres for your team to review.
 
 **Product page + live demo:** [instafeed.chat](https://instafeed.chat) · **Review inbox:** [instafeed.chat/review.html](https://instafeed.chat/review.html)
 
@@ -9,9 +9,9 @@ The public homepage explains the product and installation, and runs the real wid
 ## How it works
 
 1. Add the SDK to the app you want testers to review.
-2. The tester clicks the floating button. Feedback Fab captures a JPEG screenshot and immediately saves a report in Postgres.
+2. The tester hovers over the floating button (or taps it on a touch screen), then chooses thumbs up or thumbs down. InstaFeed captures a JPEG screenshot and immediately saves the report and reaction in Postgres.
 3. A compact card appears. The tester can click “Add a comment” to open the text field and attach context to that report.
-4. Review submissions at `/review.html` with the review token.
+4. Review submissions and their thumbs-up/down badges at `/review.html` with the review token. Older reports retain their original data and have no reaction badge.
 
 ## Quick start
 
@@ -28,7 +28,9 @@ createFeedbackFab({
 });
 ```
 
-Options include `capture` to choose the element to screenshot, `onSubmitted`, and `onError`. Call the returned instance's `open()` method to launch feedback from your own button, or `destroy()` to remove the widget. In React, initialize it in an effect and call `destroy()` during cleanup.
+Options include `capture` to choose the element to screenshot, `onSubmitted`, and `onError`. Call the returned instance's `open()` method to open the reaction choices from your own button, or `destroy()` to remove the widget. In React, initialize it in an effect and call `destroy()` during cleanup.
+
+The optional `reaction` field in submission callbacks and review API results is `up` or `down`. Older SDK clients can still submit reports without a reaction. Keyboard users can open the launcher with Enter, choose a reaction with Tab/Enter, and close the choices with Escape.
 
 ## Deploy the feedback API
 

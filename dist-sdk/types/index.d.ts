@@ -10,16 +10,21 @@ export interface FeedbackFabOptions {
     /** Called when capture or submission fails. */
     onError?: (error: Error) => void;
 }
+export type FeedbackReaction = "up" | "down";
 export interface FeedbackReceipt {
     id: string;
     createdAt: string;
+    reaction?: FeedbackReaction;
 }
 export declare class FeedbackFab {
     private host;
     private root;
     private screenshot;
     private feedbackId;
+    private reaction;
+    private capturing;
     private options;
+    private readonly onOutsidePointer;
     constructor(options: FeedbackFabOptions);
     destroy(): void;
     /** Open the feedback widget from your own button or link. */
@@ -29,6 +34,7 @@ export declare class FeedbackFab {
     private uploadScreenshot;
     private submit;
     private setMessage;
+    private setChoosing;
     private reset;
 }
 export declare function createFeedbackFab(options: FeedbackFabOptions): FeedbackFab;
