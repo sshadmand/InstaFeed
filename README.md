@@ -2,6 +2,8 @@
 
 An open-source feedback widget for web apps. A tester clicks the floating down-thumb, the widget captures the page, then offers an optional comment. The report and screenshot are stored together in Postgres for your team to review.
 
+**Live demo:** [feedback-fab-eight.vercel.app](https://feedback-fab-eight.vercel.app) · **Review inbox:** [feedback-fab-eight.vercel.app/review.html](https://feedback-fab-eight.vercel.app/review.html)
+
 ## How it works
 
 1. Add the SDK to the app you want testers to review.
@@ -12,7 +14,7 @@ An open-source feedback widget for web apps. A tester clicks the floating down-t
 ## Quick start
 
 ```sh
-npm install feedback-fab
+npm install github:sshadmand/feedback-fab
 ```
 
 ```ts
