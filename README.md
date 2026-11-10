@@ -1,5 +1,7 @@
 # InstaFeed · Feedback Fab SDK
 
+![InstaFeed brandmark and wordmark](./instafeed-logo.svg)
+
 An open-source feedback widget for web apps. The floating button shows overlapping thumbs. Hover or tap to reveal separate thumbs-up and thumbs-down buttons; choosing one captures the page and offers an optional comment. The report and screenshot are stored together in Postgres for your team to review.
 
 **Product page + live demo:** [instafeed.chat](https://instafeed.chat) · **Review inbox:** [instafeed.chat/review.html](https://instafeed.chat/review.html)
