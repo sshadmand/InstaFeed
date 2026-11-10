@@ -70,6 +70,16 @@ export class FeedbackFab {
 
   destroy() { this.host.remove(); }
 
+  /** Open the feedback widget from your own button or link. */
+  open() {
+    if (this.root.querySelector<HTMLButtonElement>(".fab")!.disabled) return;
+    if (this.feedbackId) {
+      this.root.querySelector(".card")!.classList.add("visible");
+      return;
+    }
+    void this.capture();
+  }
+
   private render() {
     this.root.innerHTML = `<style>${buttonStyle}</style>
       <button class="fab" aria-label="Send page feedback" title="Send page feedback">${thumbIcon}</button>
@@ -78,7 +88,7 @@ export class FeedbackFab {
         <div class="comment-row"><button class="note-button" aria-label="Add a comment">${thumbIcon}<span>Add a comment?</span></button><button class="dismiss" aria-label="Close">×</button></div>
         <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div></div><div class="error" role="alert"></div>
       </section>`;
-    this.root.querySelector<HTMLButtonElement>(".fab")!.addEventListener("click", () => void this.capture());
+    this.root.querySelector<HTMLButtonElement>(".fab")!.addEventListener("click", () => this.open());
     this.root.querySelector<HTMLButtonElement>(".note-button")!.addEventListener("click", () => {
       this.root.querySelector(".card")!.classList.add("expanded");
       this.root.querySelector(".entry")!.classList.add("open");

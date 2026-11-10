@@ -18,8 +18,8 @@
   "files": ["dist-sdk", "README.md", "LICENSE"],
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc -p tsconfig.json && vite build --config vite.sdk.config.ts && vite build --config vite.demo.config.ts",
-    "preview": "vite preview --host 0.0.0.0"
+    "build": "vite build --config vite.sdk.config.ts && tsc -p tsconfig.json && vite build --config vite.demo.config.ts",
+    "preview": "vite preview --config vite.demo.config.ts --host 0.0.0.0"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",

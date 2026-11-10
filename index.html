@@ -3,30 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="InstaFeed makes it easy for testers to share visual feedback in context." />
-    <title>InstaFeed — visual feedback for web apps</title>
+    <meta name="description" content="InstaFeed is an open-source visual feedback SDK. Add a floating feedback button to your web app, capture screenshots, and collect tester comments in context." />
+    <meta name="theme-color" content="#f8f8fc" />
+    <title>InstaFeed — feedback, right where it happens.</title>
   </head>
   <body>
-    <main class="demo">
-      <header class="demo-header"><span class="mark">IF</span><span>INSTAFEED</span><span class="badge">LIVE DEMO</span></header>
-      <section class="hero">
-        <div class="eyebrow">Visual feedback, built into your app</div>
-        <h1>Meet InstaFeed.<br />Feedback in context.</h1>
-        <p>Testers tap the thumb to capture the page, then add a quick note. InstaFeed brings every screenshot and comment together for your team to review.</p>
-        <div class="hint"><span class="hint-dot"></span> Tap the thumb in the lower right corner to try InstaFeed</div>
-      </section>
-      <section class="preview" aria-label="Example application screen">
-        <div class="window-bar"><span></span><span></span><span></span><div>acme.app / dashboard</div></div>
-        <div class="app-frame">
-          <aside><div class="app-logo">a<span>.</span></div><div class="nav active">◫ <small>Overview</small></div><div class="nav">▤ <small>Projects</small></div><div class="nav">◷ <small>Activity</small></div><div class="nav">⚙ <small>Settings</small></div><div class="avatar">S</div></aside>
-          <div class="app-content"><div class="app-top"><span>Monday, November 9</span><span>● Sean</span></div><h2>Good morning, Sean <span>✳</span></h2><p>Here’s what’s happening with your workspace.</p>
-            <div class="stats"><article><label>ACTIVE PROJECTS</label><strong>08</strong><em>↑ 2 this month</em></article><article><label>TASKS COMPLETED</label><strong>124</strong><em>↑ 18% this week</em></article><article><label>TEAM MEMBERS</label><strong>12</strong><em>+ Invite a teammate</em></article></div>
-            <div class="chart"><div><b>Activity</b><span>Last 7 days　⌄</span></div><div class="bars"><i style="height:35%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:78%"></i><i style="height:55%"></i><i style="height:92%"></i><i style="height:69%"></i></div></div>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="InstaFeed home"><span class="brand-mark">IF</span>InstaFeed<span class="brand-tag">OPEN SOURCE</span></a>
+        <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#install">Install</a><a class="github-link" href="https://github.com/sshadmand/feedback-fab" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </header>
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <div class="eyebrow"><span></span> A LITTLE BUTTON. A LOT MORE CONTEXT.</div>
+            <h1 id="hero-title">Feedback, right<br />where it <em>happens.</em></h1>
+            <p>Add InstaFeed to your web app. Testers tap the thumb, the page is captured, and a quick comment fills in the rest.</p>
+            <div class="hero-actions"><button class="button primary" data-try-demo>Try it on this page <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></button><a class="button secondary" href="#install">Add it to your app <span aria-hidden="true">→</span></a></div>
+            <div class="hero-meta"><span>MIT licensed</span><i></i><span>Works with any web app</span><i></i><span>No tester account needed</span></div>
           </div>
-        </div>
-      </section>
-      <footer>Built for the moments when “something feels off.”</footer>
-    </main>
+          <div class="product-visual" aria-label="Illustrative example of a page screenshot with tester feedback">
+            <div class="visual-heading"><span class="live-dot"></span> THE PAGE + THE CONTEXT</div>
+            <div class="browser-card">
+              <div class="browser-bar"><div class="window-dots"><i></i><i></i><i></i></div><span>your-app.com / workspace</span><span aria-hidden="true">↗</span></div>
+              <div class="sample-app"><div class="sample-sidebar"><b>n<span>•</span></b><i class="selected"></i><i></i><i></i><i></i><span class="sample-avatar">S</span></div><div class="sample-content"><div class="sample-toolbar"><span>Workspace</span><span>⌕</span></div><div class="sample-greeting"><span>YOUR WORKSPACE</span><strong>A little progress, every day.</strong><small>Here’s what your team is working on.</small></div><div class="sample-project"><span class="project-icon lavender">↗</span><div><b>Website refresh</b><small>Design · 4 tasks left</small></div><i class="progress"><span></span></i></div><div class="sample-project"><span class="project-icon mint">◈</span><div><b>Product onboarding</b><small>In progress · 2 tasks left</small></div><i class="progress short"><span></span></i></div><div class="sample-bottom"><span>Last edited just now</span><span class="sample-save">Save changes</span></div></div></div>
+            </div>
+            <div class="example-report"><div class="report-top"><span class="report-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v10H4.5A1.5 1.5 0 0 1 3 18.5v-7A1.5 1.5 0 0 1 4.5 10H7Zm0 0 4.2-6.1a1.7 1.7 0 0 1 2.9 1.6L13 10h5.2a2 2 0 0 1 1.9 2.6l-1.8 6a2 2 0 0 1-1.9 1.4H7" /></svg></span><span>EXAMPLE FEEDBACK</span><span class="report-check">✓ Screenshot attached</span></div><p>“The save button is a little hard to find.”</p><div class="report-footer"><span>your-app.com / workspace</span><span>Just now</span></div></div>
+            <div class="visual-caption"><span aria-hidden="true">↳</span> The screenshot tells you where. The comment tells you why.</div>
+          </div>
+        </section>
+        <section class="live-demo-strip" aria-label="Live demo"><div><span class="live-dot"></span><strong>You’re already in the demo.</strong><span>The purple thumb captures this page. Add a note to send real feedback to our demo inbox.</span></div><button data-try-demo>Give it a try <span aria-hidden="true">↘</span></button></section>
+        <section id="how-it-works" class="how-section" aria-labelledby="how-title"><div class="section-intro"><span class="eyebrow">LESS BACK-AND-FORTH</span><h2 id="how-title">From “something feels off”<br />to something you can act on.</h2><p>Give testers a simple way to show you what they mean, without leaving the page.</p></div><ol class="steps"><li><span class="step-number">01</span><h3>A tap captures the moment.</h3><p>The floating thumb stays out of the way. When a tester clicks, InstaFeed takes a screenshot and saves it with the page URL.</p></li><li><span class="step-number">02</span><h3>A comment adds the context.</h3><p>The thumb becomes a compact “Add a comment?” field. Testers can expand it and attach a note to the same report.</p></li><li><span class="step-number">03</span><h3>Your team gets the full picture.</h3><p>Review screenshots and comments together in a protected inbox, with page titles and browser details close at hand.</p></li></ol></section>
+        <section id="install" class="install-section" aria-labelledby="install-title"><div class="install-heading"><div><span class="eyebrow">A FEW LINES TO GET STARTED</span><h2 id="install-title">Your app. One little addition.</h2></div><a class="text-link" href="https://github.com/sshadmand/feedback-fab#quick-start" target="_blank" rel="noreferrer">Read the documentation ↗</a></div><div class="install-grid"><div class="install-copy"><span class="step-label">01 / INSTALL THE SDK</span><h3>Bring InstaFeed into your app.</h3><p>Install from GitHub. The package and import name are <code>feedback-fab</code>.</p></div><div class="code-card terminal"><div class="code-heading"><span><i></i> TERMINAL</span><button class="copy-button" data-copy="install-command" aria-label="Copy install command">Copy</button></div><pre><code id="install-command">npm install github:sshadmand/feedback-fab</code></pre><span class="copy-status" aria-live="polite"></span></div><div class="install-copy"><span class="step-label">02 / ADD THE WIDGET</span><h3>Initialize after your page loads.</h3><p>Point it at your feedback API and give your app a name. It works with plain JavaScript or your favorite framework.</p><p class="install-note">For React, create it in an effect and call <code>widget.destroy()</code> during cleanup.</p></div><div class="code-card"><div class="code-heading"><span><i></i> JAVASCRIPT / TYPESCRIPT</span><button class="copy-button" data-copy="init-code" aria-label="Copy initialization code">Copy</button></div><pre><code id="init-code"><span class="syntax-purple">import</span> { createFeedbackFab } <span class="syntax-purple">from</span> <span class="syntax-green">'feedback-fab'</span>;
+
+<span class="syntax-purple">const</span> widget = <span class="syntax-blue">createFeedbackFab</span>({
+  endpoint: <span class="syntax-green">'https://your-feedback-api.vercel.app'</span>,
+  appName: <span class="syntax-green">'My app'</span>,
+});</code></pre><span class="copy-status" aria-live="polite"></span></div></div><div class="backend-callout"><div class="backend-icon" aria-hidden="true">↗</div><div><span class="step-label">03 / CONNECT YOUR FEEDBACK INBOX</span><h3>Host the API. Keep the feedback yours.</h3><p>Import the repository into Vercel, connect Neon Postgres, and set <code>DATABASE_URL</code> and <code>FEEDBACK_REVIEW_TOKEN</code>. Use your deployment URL as the SDK endpoint. The included review inbox opens at <code>/review.html</code> with your review token.</p><p class="backend-extra">Set <code>FEEDBACK_ALLOWED_ORIGINS</code> to limit submissions to your app’s domains.</p></div><a class="button secondary" href="https://github.com/sshadmand/feedback-fab#deploy-the-feedback-api" target="_blank" rel="noreferrer">Deploy guide ↗</a></div></section>
+        <section class="details-section" aria-label="Implementation details"><div><h3>Made to fit into your app.</h3><p>The widget isolates its styles with Shadow DOM. Choose a specific element to capture, handle submission callbacks, or remove the widget when a component unmounts.</p></div><div><h3>Know what gets captured.</h3><p>Reports include the screenshot, page URL, title, and browser details. Cross-origin iframes and protected media may not appear. Use it on pages your testers are comfortable sharing.</p></div></section>
+        <section class="closing"><span class="eyebrow">LESS EXPLAINING. MORE UNDERSTANDING.</span><h2>Put feedback where your users are.</h2><div><a class="button primary" href="#install">Get started <span aria-hidden="true">→</span></a><button class="button secondary" data-try-demo>Try the live demo</button></div></section>
+      </main>
+      <footer class="site-footer"><a class="brand" href="#"><span class="brand-mark">IF</span>InstaFeed</a><span>Open source. MIT licensed. Built for better feedback.</span><a href="https://github.com/sshadmand/feedback-fab" target="_blank" rel="noreferrer">View source ↗</a></footer>
+    </div>
     <script type="module" src="/src/demo.ts"></script>
   </body>
 </html>

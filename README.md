@@ -1,8 +1,10 @@
-# Feedback Fab
+# InstaFeed · Feedback Fab SDK
 
 An open-source feedback widget for web apps. A tester clicks the floating down-thumb, the widget captures the page, then offers an optional comment. The report and screenshot are stored together in Postgres for your team to review.
 
-**Live demo:** [feedback-fab-eight.vercel.app](https://feedback-fab-eight.vercel.app) · **Review inbox:** [feedback-fab-eight.vercel.app/review.html](https://feedback-fab-eight.vercel.app/review.html)
+**Product page + live demo:** [instafeed.chat](https://instafeed.chat) · **Review inbox:** [instafeed.chat/review.html](https://instafeed.chat/review.html)
+
+The public homepage explains the product and installation, and runs the real widget. Try it there to submit a screenshot and optional comment to the demo inbox. The SDK package and import name remain `feedback-fab`.
 
 ## How it works
 
@@ -26,7 +28,7 @@ createFeedbackFab({
 });
 ```
 
-Options include `capture` to choose the element to screenshot, `onSubmitted`, and `onError`. Call the returned instance's `destroy()` method to remove the widget.
+Options include `capture` to choose the element to screenshot, `onSubmitted`, and `onError`. Call the returned instance's `open()` method to launch feedback from your own button, or `destroy()` to remove the widget. In React, initialize it in an effect and call `destroy()` during cleanup.
 
 ## Deploy the feedback API
 
