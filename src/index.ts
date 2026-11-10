@@ -27,14 +27,15 @@ const buttonStyle = `
   .card { display: none; width: 278px; border: 1px solid #e8e8ef; border-radius: 16px; background: #fff; box-shadow: 0 16px 50px #1c1a3c26; overflow: hidden; }
   .card.visible { display: block; animation: enter .18s ease-out; }
   @keyframes enter { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-  .top { display: flex; align-items: center; gap: 10px; padding: 11px 12px; min-height: 52px; }
-  .icon { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 10px; display: grid; place-items: center; color: #6556ec; background: #f0efff; }
-  .icon svg { width: 17px; height: 17px; }
-  .message { flex: 1; min-width: 0; color: #313247; font-size: 12px; font-weight: 600; }
+  .comment-row { display: flex; align-items: center; gap: 6px; padding: 11px; }
+  .message { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .dismiss { border: 0; color: #858598; background: transparent; padding: 4px; font-size: 18px; line-height: 1; }
-  .note-button { margin: 0 11px 11px; display: flex; align-items: center; gap: 9px; width: calc(100% - 22px); min-height: 42px; padding: 0 10px; border: 1px solid #e6e5ef; background: #fff; border-radius: 11px; color: #747487; text-align: left; font-size: 12px; }
+  .note-button { display: flex; flex: 1; align-items: center; gap: 9px; min-height: 42px; padding: 0 10px; border: 1px solid #e6e5ef; background: #fff; border-radius: 11px; color: #747487; text-align: left; font-size: 12px; }
   .note-button:hover { border-color: #b9b3f7; background: #fbfaff; }
   .note-button svg { width: 15px; height: 15px; color: #6556ec; flex: 0 0 auto; }
+  .card.expanded .comment-row { padding-bottom: 5px; }
+  .card.expanded .note-button { min-height: 24px; border: 0; pointer-events: none; }
+  .card.expanded .note-button span { display: none; }
   .entry { display: none; padding: 0 11px 11px; }
   .entry.open { display: block; }
   textarea { display: block; width: 100%; min-height: 78px; resize: vertical; padding: 9px 10px; border: 1px solid #e5e4ec; border-radius: 10px; outline: none; color: #202034; font-size: 12px; }
@@ -44,7 +45,7 @@ const buttonStyle = `
   .send { border: 0; border-radius: 8px; background: #6758ef; color: #fff; padding: 7px 11px; font-size: 11px; font-weight: 600; }
   .send:disabled { opacity: .55; cursor: wait; }
   .error { display: none; margin-top: 6px; color: #ba3342; font-size: 11px; }
-  .error.visible { display: block; }
+  .error.visible { display: block; margin: 0 11px 11px; }
   @media (max-width: 380px) { :host { right: 14px; bottom: 14px; } }
 `;
 
@@ -73,12 +74,13 @@ export class FeedbackFab {
     this.root.innerHTML = `<style>${buttonStyle}</style>
       <button class="fab" aria-label="Send page feedback" title="Send page feedback">${thumbIcon}</button>
       <section class="card" aria-live="polite">
-        <div class="top"><span class="icon">${thumbIcon}</span><span class="message">Screenshot captured</span><button class="dismiss" aria-label="Close">×</button></div>
-        <button class="note-button" aria-label="Add a comment">${thumbIcon}<span>Add a comment?</span></button>
-        <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div><div class="error"></div></div>
+        <span class="message" role="status"></span>
+        <div class="comment-row"><button class="note-button" aria-label="Add a comment">${thumbIcon}<span>Add a comment?</span></button><button class="dismiss" aria-label="Close">×</button></div>
+        <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div></div><div class="error" role="alert"></div>
       </section>`;
     this.root.querySelector<HTMLButtonElement>(".fab")!.addEventListener("click", () => void this.capture());
     this.root.querySelector<HTMLButtonElement>(".note-button")!.addEventListener("click", () => {
+      this.root.querySelector(".card")!.classList.add("expanded");
       this.root.querySelector(".entry")!.classList.add("open");
       this.root.querySelector<HTMLTextAreaElement>("textarea")!.focus();
     });
@@ -90,7 +92,9 @@ export class FeedbackFab {
     const fabButton = this.root.querySelector<HTMLButtonElement>(".fab")!;
     const noteButton = this.root.querySelector<HTMLButtonElement>(".note-button")!;
     fabButton.disabled = true;
+    fabButton.classList.add("hidden");
     noteButton.disabled = true;
+    this.root.querySelector(".error")!.classList.remove("visible");
     try {
       const canvas = await html2canvas(this.options.capture?.() ?? document.documentElement, {
         useCORS: true, allowTaint: false, scale: Math.min(window.devicePixelRatio || 1, 1.5),
@@ -107,6 +111,10 @@ export class FeedbackFab {
     } catch (error) {
       this.options.onError?.(asError(error));
       this.setMessage("Could not send feedback. Try again.");
+      const errorMessage = this.root.querySelector<HTMLDivElement>(".error")!;
+      errorMessage.textContent = asError(error).message;
+      errorMessage.classList.add("visible");
+      fabButton.classList.remove("hidden");
       this.root.querySelector(".card")!.classList.add("visible");
     } finally { fabButton.disabled = false; }
   }
@@ -165,7 +173,7 @@ export class FeedbackFab {
   }
 
   private setMessage(message: string) { this.root.querySelector(".message")!.textContent = message; }
-  private reset() { this.root.querySelector(".card")!.classList.remove("visible"); this.root.querySelector(".entry")!.classList.remove("open"); this.root.querySelector<HTMLButtonElement>(".fab")!.classList.remove("hidden"); this.screenshot = null; this.feedbackId = null; }
+  private reset() { this.root.querySelector(".card")!.classList.remove("visible", "expanded"); this.root.querySelector(".entry")!.classList.remove("open"); this.root.querySelector(".error")!.classList.remove("visible"); this.root.querySelector<HTMLButtonElement>(".fab")!.classList.remove("hidden"); this.screenshot = null; this.feedbackId = null; }
 }
 
 function asError(error: unknown) { return error instanceof Error ? error : new Error(String(error)); }
