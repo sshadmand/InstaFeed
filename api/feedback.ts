@@ -2,7 +2,7 @@ import { neon } from "@neondatabase/serverless";
 
 const MAX_SCREENSHOT_BYTES = 3_000_000;
 
-export default async function handler(request: Request): Promise<Response> {
+async function handler(request: Request): Promise<Response> {
   const origin = request.headers.get("origin") ?? "";
   const allowed = (process.env.FEEDBACK_ALLOWED_ORIGINS ?? "").split(",").map((value) => value.trim()).filter(Boolean);
   const headers = new Headers({ "Cache-Control": "no-store", "Vary": "Origin" });
@@ -79,6 +79,8 @@ export default async function handler(request: Request): Promise<Response> {
     return json({ error: "Feedback could not be processed." }, 500, headers);
   }
 }
+
+export default { fetch: handler };
 
 function json(data: unknown, status: number, headers: Headers) {
   headers.set("Content-Type", "application/json; charset=utf-8");
