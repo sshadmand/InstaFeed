@@ -34,6 +34,8 @@ This repository includes a Vercel demo, API, and reviewer inbox. Import the GitH
 
 The API creates its table on the first request. Screenshot images are stored in the `screenshot_data_url` column to keep each report self-contained. API submissions accept screenshots up to 3 MB. The inbox requires the reviewer token and returns only the latest 200 reports. Use `FEEDBACK_ALLOWED_ORIGINS` to limit the tester apps allowed to submit.
 
+The `/playground.html` sample support dashboard is included in local development and Vercel Preview builds, but excluded from Production builds. Vercel Preview deployments require workspace authentication, so you can test the widget without publishing the playground to the public production site.
+
 ## Development
 
 ```sh

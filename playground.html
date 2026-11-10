@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Private preview playground for the Feedback Fab SDK." />
+    <title>Feedback Fab Playground</title>
+  </head>
+  <body>
+    <main class="playground">
+      <header class="topbar"><a class="brand" href="/"><span class="brand-icon">F</span> Feedback Fab <span class="separator">/</span> Playground</a><span class="preview-pill"><i></i> PRIVATE PREVIEW</span></header>
+      <section class="intro"><span class="kicker">TRY THE WIDGET</span><h1>See feedback in context.</h1><p>This sample support dashboard is here so you can try the feedback button the way a tester would. Click the purple thumb in the bottom right.</p></section>
+      <section class="workspace" aria-label="Sample support dashboard">
+        <aside class="sidebar"><div class="side-brand">N<span>•</span></div><div class="side-item selected">▦ <span>Overview</span></div><div class="side-item">◷ <span>Inbox</span><b>4</b></div><div class="side-item">♧ <span>Customers</span></div><div class="side-item">▤ <span>Reports</span></div><div class="side-profile"><span class="profile-pic">S</span><span>Sean Shadmand<small>Workspace admin</small></span><span class="dots">•••</span></div></aside>
+        <div class="main-panel"><div class="toolbar"><span>Northstar Support <span class="crumb">/ Overview</span></span><button class="help">⌕　Search</button></div><div class="page-content"><div class="welcome"><div><span class="date-label">MONDAY, NOVEMBER 10</span><h2>Good morning, Sean <span>✦</span></h2><p>Here’s the latest from your support team.</p></div><button class="range">Last 7 days　⌄</button></div>
+          <div class="metrics"><article><span>OPEN CONVERSATIONS</span><strong>24</strong><small class="up">↑ 12% <em>vs last week</em></small></article><article><span>AVG. FIRST RESPONSE</span><strong>3m 42s</strong><small class="down">↓ 8% <em>vs last week</em></small></article><article><span>CUSTOMER RATING</span><strong>96.8%</strong><small class="up">↑ 2.4% <em>vs last week</em></small></article></div>
+          <div class="columns"><article class="activity"><div class="section-heading"><div><strong>Recent conversations</strong><small>Latest activity from your inbox</small></div><a href="#inbox">View inbox →</a></div><div class="conversation"><span class="customer c1">JL</span><div><b>Jordan Lee</b><p>Can you help me update my billing details?</p></div><time>2 min ago</time></div><div class="conversation"><span class="customer c2">MP</span><div><b>Morgan Patel</b><p>The new dashboard is looking great!</p></div><time>18 min ago</time></div><div class="conversation"><span class="customer c3">AR</span><div><b>Alex Rivera</b><p>I’m having trouble inviting my team.</p></div><time>41 min ago</time></div><div class="conversation"><span class="customer c4">SK</span><div><b>Sam Kim</b><p>Where can I export my monthly report?</p></div><time>1 hr ago</time></div></article>
+            <article class="chart-card"><div class="section-heading"><div><strong>Conversation volume</strong><small>This week</small></div><span class="chart-menu">•••</span></div><div class="chart-value">184 <small>conversations</small></div><div class="chart"><div class="y-labels"><span>60</span><span>40</span><span>20</span><span>0</span></div><div class="plot"><div class="gridline"></div><div class="gridline"></div><div class="gridline"></div><svg viewBox="0 0 360 130" preserveAspectRatio="none" aria-label="Conversation volume trending upward"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7668f5" stop-opacity=".2"/><stop offset="1" stop-color="#7668f5" stop-opacity="0"/></linearGradient></defs><path d="M0 98 C35 82 37 95 70 70 S105 82 140 58 S177 65 210 43 S245 56 280 30 S325 46 360 12 V130 H0Z" fill="url(#fill)"/><path d="M0 98 C35 82 37 95 70 70 S105 82 140 58 S177 65 210 43 S245 56 280 30 S325 46 360 12" fill="none" stroke="#7668f5" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg><div class="x-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></div></div></article></div>
+        </div></div>
+      </section>
+      <footer><span class="foot-dot"></span> Test feedback is saved to this Preview deployment’s database.</footer>
+    </main>
+    <script type="module" src="/src/playground.ts"></script>
+  </body>
+</html>
