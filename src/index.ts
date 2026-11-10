@@ -22,6 +22,7 @@ const buttonStyle = `
   button { cursor: pointer; }
   .fab { width: 52px; height: 52px; border: 0; border-radius: 50%; background: #6758ef; color: white; display: grid; place-items: center; box-shadow: 0 8px 24px #39309645; transition: transform .16s, background .16s; }
   .fab:hover { transform: translateY(-2px); background: #5545dc; }
+  .fab.hidden { display: none; }
   .fab svg { width: 22px; height: 22px; }
   .card { display: none; width: 278px; border: 1px solid #e8e8ef; border-radius: 16px; background: #fff; box-shadow: 0 16px 50px #1c1a3c26; overflow: hidden; }
   .card.visible { display: block; animation: enter .18s ease-out; }
@@ -73,8 +74,8 @@ export class FeedbackFab {
       <button class="fab" aria-label="Send page feedback" title="Send page feedback">${thumbIcon}</button>
       <section class="card" aria-live="polite">
         <div class="top"><span class="icon">${thumbIcon}</span><span class="message">Screenshot captured</span><button class="dismiss" aria-label="Close">×</button></div>
-        <button class="note-button">${commentIcon}<span>Add a comment</span></button>
-        <div class="entry"><textarea maxlength="4000" placeholder="What should we know?" aria-label="Feedback comment"></textarea><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div><div class="error"></div></div>
+        <button class="note-button" aria-label="Add a comment">${thumbIcon}<span>Add a comment?</span></button>
+        <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div><div class="error"></div></div>
       </section>`;
     this.root.querySelector<HTMLButtonElement>(".fab")!.addEventListener("click", () => void this.capture());
     this.root.querySelector<HTMLButtonElement>(".note-button")!.addEventListener("click", () => {
@@ -102,6 +103,7 @@ export class FeedbackFab {
       await this.uploadScreenshot();
       this.setMessage("Screenshot sent. Add a comment?");
       noteButton.disabled = false;
+      fabButton.classList.add("hidden");
     } catch (error) {
       this.options.onError?.(asError(error));
       this.setMessage("Could not send feedback. Try again.");
@@ -163,10 +165,9 @@ export class FeedbackFab {
   }
 
   private setMessage(message: string) { this.root.querySelector(".message")!.textContent = message; }
-  private reset() { this.root.querySelector(".card")!.classList.remove("visible"); this.root.querySelector(".entry")!.classList.remove("open"); this.screenshot = null; this.feedbackId = null; }
+  private reset() { this.root.querySelector(".card")!.classList.remove("visible"); this.root.querySelector(".entry")!.classList.remove("open"); this.root.querySelector<HTMLButtonElement>(".fab")!.classList.remove("hidden"); this.screenshot = null; this.feedbackId = null; }
 }
 
-const commentIcon = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 function asError(error: unknown) { return error instanceof Error ? error : new Error(String(error)); }
 
 export function createFeedbackFab(options: FeedbackFabOptions) { return new FeedbackFab(options); }
