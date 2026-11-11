@@ -1,7 +1,16 @@
 {
-  "name": "feedback-fab",
+  "name": "@sshadmandco/instafeed",
   "version": "0.1.0",
-  "description": "A tiny feedback widget for web apps that captures a screenshot and optional tester comments.",
+  "description": "Screenshot and comment feedback widget for web apps.",
+  "homepage": "https://instafeed.chat",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sshadmand/InstaFeed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sshadmand/InstaFeed/issues"
+  },
+  "keywords": ["instafeed", "feedback", "visual feedback", "screenshot feedback", "testing"],
   "type": "module",
   "main": "./dist-sdk/feedback-fab.umd.cjs",
   "module": "./dist-sdk/feedback-fab.es.js",
@@ -14,12 +23,13 @@
     }
   },
   "license": "MIT",
+  "publishConfig": { "access": "public" },
   "sideEffects": false,
   "files": ["dist-sdk", "README.md", "LICENSE", "brandmark.svg", "instafeed-logo.svg"],
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build --config vite.sdk.config.ts && tsc -p tsconfig.json && vite build --config vite.demo.config.ts",
-    "preview": "vite preview --config vite.demo.config.ts --host 0.0.0.0"
+    "build": "tsc -p tsconfig.json && vite build --config vite.sdk.config.ts && vite build --config vite.demo.config.ts",
+    "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",

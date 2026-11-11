@@ -1,38 +1,34 @@
-# InstaFeed · Feedback Fab SDK
+# InstaFeed
 
 ![InstaFeed brandmark and wordmark](./instafeed-logo.svg)
 
-An open-source feedback widget for web apps. The floating button shows overlapping thumbs. Hover or tap to reveal separate thumbs-up and thumbs-down buttons; choosing one captures the page and offers an optional comment. The report and screenshot are stored together in Postgres for your team to review.
+An open-source feedback widget for web apps. Hover over or tap the floating button to reveal thumbs-up and thumbs-down choices. Selecting a reaction captures the page, then offers an optional comment. The report, screenshot, and reaction are stored together in Postgres for your team to review.
 
-**Product page + live demo:** [instafeed.chat](https://instafeed.chat) · **Review inbox:** [instafeed.chat/review.html](https://instafeed.chat/review.html)
-
-The public homepage explains the product and installation, and runs the real widget. Try it there to submit a screenshot and optional comment to the demo inbox. The SDK package and import name remain `feedback-fab`.
+**Live demo:** [instafeed.chat](https://instafeed.chat) · **Review inbox:** [instafeed.chat/review.html](https://instafeed.chat/review.html)
 
 ## How it works
 
 1. Add the SDK to the app you want testers to review.
-2. The tester hovers over the floating button (or taps it on a touch screen), then chooses thumbs up or thumbs down. InstaFeed captures a JPEG screenshot and immediately saves the report and reaction in Postgres.
+2. The tester hovers over or taps the floating button, then chooses thumbs up or thumbs down. InstaFeed captures a JPEG screenshot and immediately saves the report and reaction in Postgres.
 3. A compact card appears. The tester can click “Add a comment” to open the text field and attach context to that report.
-4. Review submissions and their thumbs-up/down badges at `/review.html` with the review token. Older reports retain their original data and have no reaction badge.
+4. Review submissions and their reaction badges at `/review.html` with the review token.
 
 ## Quick start
 
 ```sh
-npm install github:sshadmand/feedback-fab
+npm install @sshadmandco/instafeed
 ```
 
 ```ts
-import { createFeedbackFab } from "feedback-fab";
+import { createFeedbackFab } from "@sshadmandco/instafeed";
 
 createFeedbackFab({
-  endpoint: "https://your-feedback-project.vercel.app",
+  endpoint: "https://instafeed.chat",
   appName: "My app",
 });
 ```
 
-Options include `capture` to choose the element to screenshot, `onSubmitted`, and `onError`. Call the returned instance's `open()` method to open the reaction choices from your own button, or `destroy()` to remove the widget. In React, initialize it in an effect and call `destroy()` during cleanup.
-
-The optional `reaction` field in submission callbacks and review API results is `up` or `down`. Older SDK clients can still submit reports without a reaction. Keyboard users can open the launcher with Enter, choose a reaction with Tab/Enter, and close the choices with Escape.
+Options include `capture` to choose the element to screenshot, `onSubmitted`, and `onError`. Call the returned instance's `destroy()` method to remove the widget.
 
 ## Deploy the feedback API
 

@@ -22,13 +22,12 @@ export declare class FeedbackFab {
     private screenshot;
     private feedbackId;
     private reaction;
+    private hoverTimer;
     private capturing;
-    private options;
     private readonly onOutsidePointer;
+    private options;
     constructor(options: FeedbackFabOptions);
     destroy(): void;
-    /** Open the feedback widget from your own button or link. */
-    open(): void;
     private render;
     private capture;
     private uploadScreenshot;

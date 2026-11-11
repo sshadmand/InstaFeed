@@ -17,9 +17,7 @@ input { width: min(360px, 50vw); padding: 10px; border: 1px solid #dedde8; borde
 .detail { display: flex; flex-direction: column; align-items: start; padding: 17px; }
 .report-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; width: 100%; }
 .report-heading strong { font-size: 13px; }.report-heading time { color: #9796a6; font-size: 10px; text-align: right; }
-.reaction-badge { display: inline-flex; margin-top: 11px; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
-.reaction-up { color: #34765a; background: #edf7f0; }
-.reaction-down { color: #8c5646; background: #fff1eb; }
+.reaction-badge { display: inline-block; margin-top: 10px; padding: 4px 8px; border-radius: 999px; background: #f0efff; color: #6556e8; font-size: 10px; font-weight: 600; }.reaction-down { background: #fff2f2; color: #b44a54; }
 .detail p { flex: 1; margin: 20px 0; color: #555568; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
 .detail a { max-width: 100%; overflow: hidden; color: #6556e8; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .detail small { overflow: hidden; max-width: 100%; margin-top: 8px; color: #aaa9b5; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }

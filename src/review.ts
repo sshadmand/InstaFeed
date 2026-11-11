@@ -36,9 +36,7 @@ function render(records: Array<{ id: string; createdAt: string; appName: string;
       badge.className = `reaction-badge reaction-${item.reaction}`;
       badge.textContent = item.reaction === "up" ? "👍 Thumbs up" : "👎 Thumbs down";
       detail.append(heading, badge);
-    } else {
-      detail.append(heading);
-    }
+    } else detail.append(heading);
     const comment = document.createElement("p"); comment.textContent = item.comment || "No comment added.";
     const link = document.createElement("a"); link.href = item.url; link.target = "_blank"; link.rel = "noreferrer"; link.textContent = item.title || item.url;
     const browser = document.createElement("small"); browser.textContent = item.userAgent;

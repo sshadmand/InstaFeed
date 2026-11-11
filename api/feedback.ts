@@ -35,9 +35,7 @@ async function handler(request: Request): Promise<Response> {
       const form = await request.formData();
       const screenshot = form.get("screenshot");
       const reaction = form.get("reaction");
-      if (reaction !== null && reaction !== "up" && reaction !== "down") {
-        return json({ error: "Reaction must be up or down." }, 400, headers);
-      }
+      if (reaction !== "up" && reaction !== "down") return json({ error: "Reaction must be up or down." }, 400, headers);
       const comment = String(form.get("comment") ?? "").trim().slice(0, 4000);
       const url = String(form.get("url") ?? "").slice(0, 2048);
       if (!(screenshot instanceof File) || !screenshot.type.startsWith("image/") || screenshot.size > MAX_SCREENSHOT_BYTES) {
