@@ -100,7 +100,7 @@ export class FeedbackFab {
     const fabButton = this.root.querySelector<HTMLButtonElement>(".fab")!;
     fabButton.addEventListener("click", () => { if (!launcher.classList.contains("choosing")) this.setChoosing(true); });
     launcher.addEventListener("pointerenter", (event) => { if (event.pointerType === "mouse" && !this.capturing) { window.clearTimeout(this.hoverTimer); launcher.classList.add("label-visible"); this.setChoosing(true); } });
-    launcher.addEventListener("pointerleave", () => { this.hoverTimer = window.setTimeout(() => { if (!launcher.contains(this.root.activeElement)) { this.setChoosing(false); launcher.classList.remove("label-visible"); } }, 3000); });
+    launcher.addEventListener("pointerleave", () => { this.hoverTimer = window.setTimeout(() => { if (!launcher.contains(this.root.activeElement)) { this.setChoosing(false); launcher.classList.remove("label-visible"); } }, 2250); });
     launcher.addEventListener("focusout", () => window.setTimeout(() => { if (!launcher.contains(this.root.activeElement)) this.setChoosing(false); }, 0));
     launcher.addEventListener("keydown", (event) => { if (event.key === "Escape") { this.setChoosing(false); fabButton.focus({ preventScroll: true }); } });
     for (const button of this.root.querySelectorAll<HTMLButtonElement>(".choice")) button.addEventListener("click", () => { this.reaction = button.dataset.reaction as FeedbackReaction; this.setChoosing(false); void this.capture(); });

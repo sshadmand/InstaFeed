@@ -4947,7 +4947,7 @@ class Xc {
     }), A.addEventListener("pointerleave", () => {
       this.hoverTimer = window.setTimeout(() => {
         A.contains(this.root.activeElement) || (this.setChoosing(!1), A.classList.remove("label-visible"));
-      }, 3e3);
+      }, 2250);
     }), A.addEventListener("focusout", () => window.setTimeout(() => {
       A.contains(this.root.activeElement) || this.setChoosing(!1);
     }, 0)), A.addEventListener("keydown", (r) => {
