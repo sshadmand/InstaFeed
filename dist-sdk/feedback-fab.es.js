@@ -4879,8 +4879,8 @@ const Rc = `
   .fab, .choice { width: 52px; height: 52px; border: 0; border-radius: 50%; background: #6758ef; color: white; display: grid; place-items: center; box-shadow: 0 8px 24px #39309645; transition: transform .16s, background .16s; }
   .fab { position: relative; z-index: 1; }
   .fab::after { content: "Open"; position: absolute; right: 62px; padding: 5px 9px; border-radius: 7px; background: #24233a; color: white; font-size: 11px; font-weight: 600; opacity: 0; pointer-events: none; transform: translateX(4px); transition: opacity .14s, transform .14s; }
-  .launcher.label-visible .fab::after { opacity: 1; transform: translateX(0); }
-  .fab:hover { transform: translateY(-2px); background: #5545dc; }
+  .launcher.label-visible .fab::after, .launcher.choosing .fab::after { opacity: 1; transform: translateX(0); }
+  .fab:hover, .launcher.choosing .fab { transform: translateY(-2px); background: #5545dc; }
   .fab svg { width: 22px; height: 22px; }
   .choices { position: absolute; right: 0; bottom: 62px; display: flex; flex-direction: column; gap: 10px; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .16s ease, transform .16s ease, visibility 0s linear .16s; }
   .launcher.choosing .choices { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 0s; }
