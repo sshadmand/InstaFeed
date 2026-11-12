@@ -27,6 +27,10 @@ export declare class FeedbackFab {
     private reaction;
     private hoverTimer;
     private capturing;
+    private recognition;
+    private voiceBase;
+    private voiceTranscript;
+    private pointerRecording;
     private readonly onOutsidePointer;
     private options;
     constructor(options: FeedbackFabOptions);
@@ -36,6 +40,8 @@ export declare class FeedbackFab {
     private submissionUrl;
     private uploadScreenshot;
     private submit;
+    private startVoiceRecording;
+    private stopVoiceRecording;
     private setMessage;
     private setChoosing;
     private reset;

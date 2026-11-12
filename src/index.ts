@@ -53,6 +53,13 @@ const buttonStyle = `
   .entry.open { display: block; }
   textarea { display: block; width: 100%; min-height: 78px; resize: vertical; padding: 9px 10px; border: 1px solid #e5e4ec; border-radius: 10px; outline: none; color: #202034; font-size: 12px; }
   textarea:focus { border-color: #8277f2; box-shadow: 0 0 0 3px #8277f21b; }
+  .voice-row { display: flex; align-items: center; gap: 8px; min-height: 30px; margin-top: 6px; }
+  .voice { width: 28px; height: 28px; flex: 0 0 28px; display: grid; place-items: center; border: 1px solid #e6e5ef; border-radius: 9px; background: #fff; color: #6556ec; touch-action: none; }
+  .voice svg { width: 15px; height: 15px; }
+  .voice:disabled { color: #aaa; cursor: not-allowed; }
+  .voice.recording { color: #fff; background: #d83e52; border-color: #d83e52; animation: pulse 1s ease-in-out infinite alternate; }
+  @keyframes pulse { to { box-shadow: 0 0 0 4px #d83e5230; } }
+  .voice-hint { color: #858598; font-size: 10px; }
   .actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
   .privacy { color: #9292a1; font-size: 10px; }
   .send { border: 0; border-radius: 8px; background: #6758ef; color: #fff; padding: 7px 11px; font-size: 11px; font-weight: 600; }
@@ -65,6 +72,15 @@ const buttonStyle = `
 const thumbIcon = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10v10H4.5A1.5 1.5 0 0 1 3 18.5v-7A1.5 1.5 0 0 1 4.5 10H7Zm0 0 4.2-6.1a1.7 1.7 0 0 1 2.9 1.6L13 10h5.2a2 2 0 0 1 1.9 2.6l-1.8 6a2 2 0 0 1-1.9 1.4H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const thumbDownIcon = thumbIcon.replace('viewBox="0 0 24 24"', 'viewBox="0 0 24 24" style="transform: rotate(180deg)"');
 const combinedThumbIcon = `<svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><g transform="translate(0 0) scale(.8)">${thumbIcon.replace(/<\/?svg[^>]*>/g, "")}</g><g transform="translate(34 34) rotate(180) scale(.8)">${thumbIcon.replace(/<\/?svg[^>]*>/g, "")}</g></svg>`;
+const micIcon = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3m-4 0h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+
+interface SpeechRecognitionResultLike { isFinal: boolean; 0: { transcript: string } }
+interface SpeechRecognitionEventLike { resultIndex: number; results: ArrayLike<SpeechRecognitionResultLike> }
+interface SpeechRecognitionLike {
+  continuous: boolean; interimResults: boolean; onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: { error: string }) => void) | null; onend: (() => void) | null;
+  start(): void; stop(): void; abort(): void;
+}
 
 export class FeedbackFab {
   private host: HTMLDivElement;
@@ -75,6 +91,10 @@ export class FeedbackFab {
   private reaction: FeedbackReaction = "up";
   private hoverTimer = 0;
   private capturing = false;
+  private recognition: SpeechRecognitionLike | null = null;
+  private voiceBase = "";
+  private voiceTranscript = "";
+  private pointerRecording = false;
   private readonly onOutsidePointer = (event: PointerEvent) => { if (!event.composedPath().includes(this.host)) this.setChoosing(false); };
   private options: FeedbackFabOptions;
 
@@ -98,7 +118,7 @@ export class FeedbackFab {
       <section class="card" aria-live="polite">
         <div class="top"><span class="icon">${thumbIcon}</span><span class="message">Screenshot captured</span><button class="dismiss" aria-label="Close">×</button></div>
         <button class="note-button" aria-label="Add a comment">${thumbIcon}<span>Add a comment?</span></button>
-        <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div><div class="error"></div></div>
+        <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="voice-row"><button class="voice" type="button" aria-label="Hold to record a voice note" title="Hold to record a voice note">${micIcon}</button><span class="voice-hint" aria-live="polite">Hold the mic and speak</span></div><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div><div class="error"></div></div>
       </section>`;
     const launcher = this.root.querySelector<HTMLDivElement>(".launcher")!;
     const fabButton = this.root.querySelector<HTMLButtonElement>(".fab")!;
@@ -112,6 +132,37 @@ export class FeedbackFab {
       this.root.querySelector(".entry")!.classList.add("open");
       this.root.querySelector<HTMLTextAreaElement>("textarea")!.focus();
     });
+    const voiceButton = this.root.querySelector<HTMLButtonElement>(".voice")!;
+    const SpeechRecognitionConstructor = (window as Window & { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike }).SpeechRecognition
+      ?? (window as Window & { webkitSpeechRecognition?: new () => SpeechRecognitionLike }).webkitSpeechRecognition;
+    if (!SpeechRecognitionConstructor) {
+      voiceButton.disabled = true;
+      voiceButton.title = "Voice notes are not supported by this browser";
+      this.root.querySelector<HTMLElement>(".voice-hint")!.textContent = "Voice notes aren’t supported in this browser";
+    } else {
+      voiceButton.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        this.pointerRecording = true;
+        voiceButton.setPointerCapture(event.pointerId);
+        this.startVoiceRecording(SpeechRecognitionConstructor);
+      });
+      const stopPointerRecording = () => {
+        if (!this.pointerRecording) return;
+        this.pointerRecording = false;
+        this.stopVoiceRecording();
+      };
+      voiceButton.addEventListener("pointerup", stopPointerRecording);
+      voiceButton.addEventListener("pointercancel", stopPointerRecording);
+      voiceButton.addEventListener("lostpointercapture", stopPointerRecording);
+      voiceButton.addEventListener("keydown", (event) => {
+        if ((event.key === " " || event.key === "Enter") && !event.repeat) { event.preventDefault(); this.startVoiceRecording(SpeechRecognitionConstructor); }
+      });
+      voiceButton.addEventListener("keyup", (event) => {
+        if (event.key === " " || event.key === "Enter") { event.preventDefault(); this.stopVoiceRecording(); }
+      });
+      voiceButton.addEventListener("blur", () => this.stopVoiceRecording());
+    }
     this.root.querySelector<HTMLButtonElement>(".dismiss")!.addEventListener("click", () => this.reset());
     this.root.querySelector<HTMLButtonElement>(".send")!.addEventListener("click", () => void this.submit());
   }
@@ -207,6 +258,55 @@ export class FeedbackFab {
     } finally { send.disabled = false; }
   }
 
+  private startVoiceRecording(Recognition: new () => SpeechRecognitionLike) {
+    if (this.recognition) return;
+    const textarea = this.root.querySelector<HTMLTextAreaElement>("textarea")!;
+    const voiceButton = this.root.querySelector<HTMLButtonElement>(".voice")!;
+    const hint = this.root.querySelector<HTMLElement>(".voice-hint")!;
+    const recognition = new Recognition();
+    this.voiceBase = textarea.value.trim();
+    this.voiceTranscript = "";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.onresult = (event) => {
+      const parts: string[] = [];
+      for (let index = 0; index < event.results.length; index++) parts.push(event.results[index][0].transcript);
+      this.voiceTranscript = parts.join("").trim();
+      textarea.value = [this.voiceBase, this.voiceTranscript].filter(Boolean).join(this.voiceBase ? " " : "").slice(0, 4000);
+    };
+    recognition.onerror = (event) => {
+      this.recognition = null;
+      voiceButton.classList.remove("recording");
+      voiceButton.setAttribute("aria-label", "Hold to record a voice note");
+      hint.textContent = event.error === "not-allowed" ? "Allow microphone access to record" : "Couldn’t record. Try again";
+      recognition.abort();
+    };
+    recognition.onend = () => {
+      if (this.recognition !== recognition) return;
+      this.recognition = null;
+      voiceButton.classList.remove("recording");
+      voiceButton.setAttribute("aria-label", "Hold to record a voice note");
+      hint.textContent = this.voiceTranscript ? "Voice note added to your comment" : "Hold the mic and speak";
+    };
+    this.recognition = recognition;
+    voiceButton.classList.add("recording");
+    voiceButton.setAttribute("aria-label", "Recording voice note. Release to stop");
+    hint.textContent = "Recording… release to stop";
+    try { recognition.start(); }
+    catch (error) {
+      this.recognition = null;
+      voiceButton.classList.remove("recording");
+      hint.textContent = "Couldn’t start recording. Try again";
+      this.options.onError?.(asError(error));
+    }
+  }
+
+  private stopVoiceRecording() {
+    const recognition = this.recognition;
+    if (!recognition) return;
+    try { recognition.stop(); } catch { recognition.abort(); }
+  }
+
   private setMessage(message: string) { this.root.querySelector(".message")!.textContent = message; }
   private setChoosing(choosing: boolean) {
     const launcher = this.root.querySelector<HTMLDivElement>(".launcher")!;
@@ -214,7 +314,7 @@ export class FeedbackFab {
     this.root.querySelector<HTMLButtonElement>(".fab")!.setAttribute("aria-expanded", String(choosing));
     this.root.querySelector(".choices")!.setAttribute("aria-hidden", String(!choosing));
   }
-  private reset() { this.root.querySelector(".card")!.classList.remove("visible"); this.root.querySelector(".entry")!.classList.remove("open"); this.root.querySelector<HTMLDivElement>(".launcher")!.classList.remove("hidden", "label-visible"); this.screenshot = null; this.feedbackId = null; this.updateToken = null; }
+  private reset() { this.stopVoiceRecording(); this.root.querySelector(".card")!.classList.remove("visible"); this.root.querySelector(".entry")!.classList.remove("open"); this.root.querySelector<HTMLDivElement>(".launcher")!.classList.remove("hidden", "label-visible"); this.screenshot = null; this.feedbackId = null; this.updateToken = null; }
 }
 
 function asError(error: unknown) { return error instanceof Error ? error : new Error(String(error)); }

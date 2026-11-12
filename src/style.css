@@ -6,7 +6,7 @@ body { margin: 0; min-width: 320px; }
 .demo { width: min(1060px, calc(100% - 40px)); margin: 0 auto; }
 .demo-header { height: 78px; display: flex; align-items: center; gap: 11px; border-bottom: 1px solid #e9e9ef; color: #5f5c78; font: 500 11px 'DM Mono', monospace; letter-spacing: .08em; }
 .mark { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 8px; color: white; background: #6a5df0; font: 700 10px 'Space Grotesk', sans-serif; letter-spacing: -.06em; }
-.badge { margin-left: auto; padding: 5px 8px; color: #6156d8; border: 1px solid #d9d5ff; border-radius: 5px; background: #f2f0ff; font-size: 9px; }
+.badge, .badge:hover { margin-left: auto; padding: 5px 8px; color: #6156d8; border: 1px solid #d9d5ff; border-radius: 5px; background: #f2f0ff; font-size: 9px; text-decoration: none; }
 .hero { padding: 72px 0 35px; }
 .eyebrow { color: #6a5df0; font: 500 11px 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .1em; }
 h1 { margin: 16px 0 17px; color: #202033; font: 600 clamp(42px, 6vw, 66px)/1.04 'Space Grotesk', sans-serif; letter-spacing: -.055em; }
