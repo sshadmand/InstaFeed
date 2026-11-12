@@ -32,8 +32,8 @@
   .launcher.label-visible .fab::after { opacity: 1; transform: translateX(0); }
   .fab:hover { transform: translateY(-2px); background: #5545dc; }
   .fab svg { width: 22px; height: 22px; }
-  .choices { position: absolute; right: 0; bottom: 62px; display: flex; flex-direction: column; gap: 10px; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .16s, transform .16s, visibility .16s; }
-  .launcher.choosing .choices { opacity: 1; visibility: visible; transform: translateY(0); }
+  .choices { position: absolute; right: 0; bottom: 62px; display: flex; flex-direction: column; gap: 10px; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .16s ease, transform .16s ease, visibility 0s linear .16s; }
+  .launcher.choosing .choices { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 0s; }
   .choice svg { width: 22px; height: 22px; }
   .choice:hover { transform: translateY(-2px); background: #5545dc; }
   .choice-down { background: white; color: #6758ef; border: 1px solid #dfdafb; }
