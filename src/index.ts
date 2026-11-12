@@ -110,6 +110,8 @@ export class FeedbackFab {
     document.addEventListener("pointerdown", this.onOutsidePointer);
   }
 
+  open() { this.setChoosing(true); }
+
   destroy() { window.clearTimeout(this.hoverTimer); document.removeEventListener("pointerdown", this.onOutsidePointer); this.host.remove(); }
 
   private render() {
