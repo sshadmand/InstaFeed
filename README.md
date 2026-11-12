@@ -112,7 +112,11 @@ The app binds to `127.0.0.1:3000` for a local reverse proxy; Postgres has no pub
 
 Import the repository, attach Neon or another Postgres database, set `DATABASE_URL`, and set production `APP_URL=https://YOUR_DOMAIN`. Leave `APP_URL` unset for Preview deployments so each preview uses its own origin. The three API handlers run on Vercel; the standalone Node server is for self-hosting. Use a separate preview database to keep test accounts and feedback away from production. `npm run build` produces the SDK, static pages, and standalone server.
 
-`FEEDBACK_ALLOWED_ORIGINS` optionally adds a deployment-wide origin allowlist; project origins always apply. Set `VITE_DEMO_PROJECT_KEY` at build time if you want the homepage/playground widget to submit to a chosen project. Include the deployment's origin in that project's allowlist. Without that variable, the demo links to workspace setup. Production builds omit the playground.
+`FEEDBACK_ALLOWED_ORIGINS` optionally adds a deployment-wide origin allowlist; project origins always apply. Production builds omit the playground.
+
+The public homepage can demonstrate the **unmodified SDK** without saving demo screenshots or comments. Set `DEMO_PROJECT_KEY` to a dedicated public demo key, set `VITE_DEMO_PROJECT_KEY` to that same value at build time, and set `DEMO_TOKEN_SECRET` to a private random secret of at least 32 characters. The regular feedback API validates demo uploads and returns normal SDK receipts, then discards the screenshot and comment. A signed receipt allows the optional comment step for ten minutes. Demo receipts are stateless; replaying a valid demo comment has no storage side effects. Only the deployment's own origin may use this discard route. Rate-limit counters are retained; feedback payloads and receipt records are not. Ordinary project submissions continue to be stored normally.
+
+To save the homepage's reports instead, set `VITE_DEMO_PROJECT_KEY` to a real project's public key and include the deployment origin in that project's allowlist. It must differ from `DEMO_PROJECT_KEY`. Without `VITE_DEMO_PROJECT_KEY`, the page links to workspace setup.
 
 ## Upgrade from 0.1 (shared inbox)
 

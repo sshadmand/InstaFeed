@@ -38,7 +38,7 @@ Preview: https://feedback-n7x24di52-shadmandco.vercel.app
 - [ ] Obtain our company name and first owner's email (asked in the chat; awaiting reply).
 - [ ] Bootstrap our owner/company/team/project with protected recovery handoff. The owner chooses their password through the recovery flow.
 - [ ] Assign the 13 preserved legacy reports to our project and verify counts/ownership.
-- [ ] Configure our production demo project key and allowed origins. Current local repository search found SDK consumers only in this repository's homepage and playground.
+- [x] Configure the public demo independently of company setup: a dedicated discard-only API key and signed demo receipts let the unchanged SDK capture, upload, and attach comments without saving demo reports. Company projects continue to store real feedback. Integration coverage verifies discard behavior and invalid/expired receipts.
 
 npm registry publication is still pending: the configured npm credential is rejected with E401. The updated SDK is distributed directly from the deployment and through the documented GitHub install. No registry login is needed for those installation paths.
 

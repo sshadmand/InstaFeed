@@ -27,6 +27,8 @@ services:
       FEEDBACK_ALLOWED_ORIGINS: ${FEEDBACK_ALLOWED_ORIGINS:-}
       FEEDBACK_REVIEW_TOKEN: ${FEEDBACK_REVIEW_TOKEN:-}
       TRUST_PROXY: ${TRUST_PROXY:-false}
+      DEMO_PROJECT_KEY: ${DEMO_PROJECT_KEY:-}
+      DEMO_TOKEN_SECRET: ${DEMO_TOKEN_SECRET:-}
     depends_on:
       db:
         condition: service_healthy

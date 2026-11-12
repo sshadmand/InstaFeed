@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { randomUUID } from 'node:crypto';
+import { createHmac, randomUUID } from 'node:crypto';
 import pg from 'pg';
 
 // An explicit test database is mandatory. Every run creates and drops only its own schema.
@@ -48,6 +48,31 @@ await test('multi-company platform on real PostgreSQL', async t => {
     const otherTeam = await call(platform,{ action:'createTeam',companyId:wa.companyId,name:'Private team' },a);
     const otherProject = await call(platform,{ action:'createProject',teamId:otherTeam.data.id,name:'Private project',allowedOrigins:['https://private.example'] },a);
     let receipt: any;
+    await t.test('public demo validates real SDK requests and discards screenshots and comments', async () => {
+      const demoKey = 'ifp_demo_integration_test'; const signingSecret = 'demo-integration-signing-secret-at-least-32-characters';
+      process.env.DEMO_PROJECT_KEY = demoKey; process.env.DEMO_TOKEN_SECRET = signingSecret;
+      try {
+        const before = Number((await pool.query('SELECT count(*) FROM feedback_submissions')).rows[0].count);
+        const preflight = await feedback(new Request(`http://localhost:3000/api/feedback?projectKey=${demoKey}`, { method:'OPTIONS', headers:{ Origin:'http://localhost:3000' } }));
+        assert.equal(preflight.status,204); assert.equal(preflight.headers.get('access-control-allow-origin'),'http://localhost:3000');
+        assert.equal((await submit({ publicKey:demoKey },'https://app-a.example')).status,403);
+        const sent = await submit({ publicKey:demoKey },'http://localhost:3000'); assert.equal(sent.status,201); assert.ok(sent.data.updateToken.startsWith('ifdu_'));
+        const patch = (id: string, updateToken: string) => feedback(new Request(`http://localhost:3000/api/feedback?projectKey=${demoKey}`, { method:'PATCH', headers:{ Origin:'http://localhost:3000','Content-Type':'application/json' }, body:JSON.stringify({ id,updateToken,comment:'Discard this demo comment.' }) }));
+        assert.equal((await patch(sent.data.id,sent.data.updateToken)).status,200);
+        assert.equal((await patch(randomUUID(),sent.data.updateToken)).status,404);
+        assert.equal((await patch(sent.data.id,sent.data.updateToken+'forged')).status,404);
+        const expiredPayload = Buffer.from(JSON.stringify({ id:sent.data.id,projectKey:demoKey,origin:'http://localhost:3000',expiresAt:Date.now()-1 })).toString('base64url');
+        const expiredToken = `ifdu_${expiredPayload}.${createHmac('sha256',signingSecret).update(expiredPayload).digest('base64url')}`;
+        assert.equal((await patch(sent.data.id,expiredToken)).status,404);
+        assert.equal((await call(feedback,undefined,a,`?projectId=${wa.project.id}&screenshotId=${sent.data.id}`)).status,404);
+        const bad = new FormData(); bad.set('reaction','sideways');
+        assert.equal((await feedback(new Request(`http://localhost:3000/api/feedback?projectKey=${demoKey}`,{ method:'POST',headers:{ Origin:'http://localhost:3000' },body:bad }))).status,400);
+        delete process.env.DEMO_TOKEN_SECRET;
+        assert.equal((await submit({ publicKey:demoKey },'http://localhost:3000')).status,503);
+        assert.equal(Number((await pool.query('SELECT count(*) FROM feedback_submissions')).rows[0].count),before);
+        assert.equal(Number((await pool.query('SELECT count(*) FROM projects WHERE public_key=$1',[demoKey])).rows[0].count),0);
+      } finally { delete process.env.DEMO_PROJECT_KEY; delete process.env.DEMO_TOKEN_SECRET; }
+    });
     await t.test('rejects unauthenticated access, cross-origin account changes, and malformed project origins',async () => {
       assert.equal((await call(platform)).status,401);
       assert.equal((await call(platform,{ action:'createCompany',name:'stolen' },a,'',{ Origin:'https://evil.example' })).status,403);

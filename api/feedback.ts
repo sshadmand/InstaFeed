@@ -1,5 +1,7 @@
 import { migrate, pool } from '../server/db.js';
-import { boundedBody, clientIp, failure, hash, HttpError, json, jsonBody, projectAccess, rateLimit, requireValue, secret, user, uuid } from '../server/security.js';
+import { demoFeedback } from '../server/demo.js';
+import { readSubmission } from '../server/submissions.js';
+import { clientIp, failure, hash, json, jsonBody, projectAccess, rateLimit, requireValue, secret, user, uuid } from '../server/security.js';
 
 export async function handler(request: Request): Promise<Response> {
   let cors: Record<string, string> = { Vary: 'Origin' };
@@ -9,6 +11,7 @@ export async function handler(request: Request): Promise<Response> {
       // Public project keys route submissions; they never authorize reading reports.
       const publicKey = url.searchParams.get('projectKey') ?? request.headers.get('x-instafeed-project');
       requireValue(publicKey && publicKey.length < 100, 401, 'Configure the SDK with your project key.');
+      if (process.env.DEMO_PROJECT_KEY && publicKey === process.env.DEMO_PROJECT_KEY) return demoFeedback(request, publicKey);
       const { rows } = await pool.query('SELECT id,name,allowed_origins FROM projects WHERE public_key=$1', [publicKey]);
       const project = rows[0]; requireValue(project, 401, 'Project key is invalid.');
       const origin = request.headers.get('origin') ?? '';
@@ -20,18 +23,9 @@ export async function handler(request: Request): Promise<Response> {
       await rateLimit(`feedback:${project.id}:${clientIp(request)}`, 60, 600);
       await rateLimit(`feedback-project:${project.id}`, 2000, 3600);
       if (request.method === 'POST') {
-        const bytes = await boundedBody(request, 3_100_000);
-        let form: FormData;
-        try { form = await new Response(bytes, { headers: { 'Content-Type': request.headers.get('content-type') ?? '' } }).formData(); }
-        catch { throw new HttpError(400, 'Send a multipart feedback submission.'); }
-        const screenshot = form.get('screenshot'); const reaction = form.get('reaction');
-        requireValue(reaction === 'up' || reaction === 'down', 400, 'Reaction must be up or down.');
-        requireValue(screenshot instanceof File && ['image/jpeg', 'image/png', 'image/webp'].includes(screenshot.type) && screenshot.size > 0 && screenshot.size <= 3_000_000, 413, 'Send a JPEG, PNG, or WebP screenshot up to 3 MB.');
-        let pageUrl: URL;
-        try { pageUrl = new URL(String(form.get('url'))); } catch { throw new HttpError(400, 'A valid page URL is required.'); }
-        requireValue(/^https?:$/.test(pageUrl.protocol) && pageUrl.toString().length <= 2048 && pageUrl.origin === origin, 400, 'Page URL must match the submitting app origin.');
+        const { screenshot, reaction, pageUrl, title, comment, userAgent } = await readSubmission(request, origin);
         const updateToken = secret('ifu_');
-        const { rows: saved } = await pool.query(`INSERT INTO feedback_submissions(project_id,app_name,page_url,page_title,comment,screenshot_data_url,user_agent,reaction,update_token_hash) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id,created_at AS "createdAt"`, [project.id, project.name, pageUrl.toString(), String(form.get('title') ?? '').slice(0,300), String(form.get('comment') ?? '').trim().slice(0,4000), `data:${screenshot.type};base64,${Buffer.from(await screenshot.arrayBuffer()).toString('base64')}`, String(form.get('userAgent') ?? '').slice(0,512), reaction, hash(updateToken)]);
+        const { rows: saved } = await pool.query(`INSERT INTO feedback_submissions(project_id,app_name,page_url,page_title,comment,screenshot_data_url,user_agent,reaction,update_token_hash) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id,created_at AS "createdAt"`, [project.id, project.name, pageUrl, title, comment, `data:${screenshot.type};base64,${Buffer.from(await screenshot.arrayBuffer()).toString('base64')}`, userAgent, reaction, hash(updateToken)]);
         return json({ ...saved[0], reaction, updateToken }, 201, cors);
       }
       const body = await jsonBody(request); const comment = String(body.comment ?? '').trim();
