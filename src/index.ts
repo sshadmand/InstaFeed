@@ -46,20 +46,20 @@ const buttonStyle = `
   .icon svg { width: 17px; height: 17px; }
   .message { flex: 1; min-width: 0; color: #313247; font-size: 12px; font-weight: 600; }
   .dismiss { border: 0; color: #858598; background: transparent; padding: 4px; font-size: 18px; line-height: 1; }
-  .note-button { margin: 0 11px 11px; display: flex; align-items: center; gap: 9px; width: calc(100% - 22px); min-height: 42px; padding: 0 10px; border: 1px solid #e6e5ef; background: #fff; border-radius: 11px; color: #747487; text-align: left; font-size: 12px; }
+  .note-options { display: flex; align-items: center; gap: 7px; margin: 0 11px 5px; }
+  .note-button { flex: 1; display: flex; align-items: center; gap: 9px; min-width: 0; min-height: 42px; padding: 0 10px; border: 1px solid #e6e5ef; background: #fff; border-radius: 11px; color: #747487; text-align: left; font-size: 12px; }
   .note-button:hover { border-color: #b9b3f7; background: #fbfaff; }
   .note-button svg { width: 15px; height: 15px; color: #6556ec; flex: 0 0 auto; }
   .entry { display: none; padding: 0 11px 11px; }
   .entry.open { display: block; }
   textarea { display: block; width: 100%; min-height: 78px; resize: vertical; padding: 9px 10px; border: 1px solid #e5e4ec; border-radius: 10px; outline: none; color: #202034; font-size: 12px; }
   textarea:focus { border-color: #8277f2; box-shadow: 0 0 0 3px #8277f21b; }
-  .voice-row { display: flex; align-items: center; gap: 8px; min-height: 30px; margin-top: 6px; }
-  .voice { width: 28px; height: 28px; flex: 0 0 28px; display: grid; place-items: center; border: 1px solid #e6e5ef; border-radius: 9px; background: #fff; color: #6556ec; touch-action: none; }
-  .voice svg { width: 15px; height: 15px; }
+  .voice { width: 42px; height: 42px; flex: 0 0 42px; display: grid; place-items: center; border: 1px solid #dcd8fa; border-radius: 11px; background: #f5f3ff; color: #6556ec; touch-action: none; }
+  .voice svg { width: 18px; height: 18px; }
   .voice:disabled { color: #aaa; cursor: not-allowed; }
   .voice.recording { color: #fff; background: #d83e52; border-color: #d83e52; animation: pulse 1s ease-in-out infinite alternate; }
   @keyframes pulse { to { box-shadow: 0 0 0 4px #d83e5230; } }
-  .voice-hint { color: #858598; font-size: 10px; }
+  .voice-hint { display: block; min-height: 13px; margin: 0 12px 8px; color: #858598; font-size: 10px; }
   .actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
   .privacy { color: #9292a1; font-size: 10px; }
   .send { border: 0; border-radius: 8px; background: #6758ef; color: #fff; padding: 7px 11px; font-size: 11px; font-weight: 600; }
@@ -119,8 +119,9 @@ export class FeedbackFab {
       <div class="launcher"><button class="fab" aria-label="Give feedback" aria-expanded="false" aria-controls="feedback-reactions">${combinedThumbIcon}</button><div class="choices" id="feedback-reactions" role="group" aria-label="Choose a feedback reaction" aria-hidden="true"><button class="choice choice-up" data-reaction="up" aria-label="Thumbs up" title="Thumbs up">${thumbIcon}</button><button class="choice choice-down" data-reaction="down" aria-label="Thumbs down" title="Thumbs down">${thumbDownIcon}</button></div></div>
       <section class="card" aria-live="polite">
         <div class="top"><span class="icon">${thumbIcon}</span><span class="message">Screenshot captured</span><button class="dismiss" aria-label="Close">×</button></div>
-        <button class="note-button" aria-label="Add a comment">${thumbIcon}<span>Add a comment?</span></button>
-        <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="voice-row"><button class="voice" type="button" aria-label="Hold to record a voice note" title="Hold to record a voice note">${micIcon}</button><span class="voice-hint" aria-live="polite">Hold the mic and speak</span></div><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div><div class="error"></div></div>
+        <div class="note-options"><button class="note-button" aria-label="Add a comment">${thumbIcon}<span>Add a comment?</span></button><button class="voice" type="button" aria-label="Hold to record a voice note" title="Hold to record a voice note">${micIcon}</button></div>
+        <span class="voice-hint" aria-live="polite">Hold the mic to speak</span>
+        <div class="entry"><textarea maxlength="4000" placeholder="Add a comment?" aria-label="Add a comment"></textarea><div class="actions"><span class="privacy">Sent securely to your team</span><button class="send">Add comment</button></div><div class="error"></div></div>
       </section>`;
     const launcher = this.root.querySelector<HTMLDivElement>(".launcher")!;
     const fabButton = this.root.querySelector<HTMLButtonElement>(".fab")!;
@@ -145,6 +146,7 @@ export class FeedbackFab {
       voiceButton.addEventListener("pointerdown", (event) => {
         if (event.button !== 0) return;
         event.preventDefault();
+        this.root.querySelector(".entry")!.classList.add("open");
         this.pointerRecording = true;
         voiceButton.setPointerCapture(event.pointerId);
         this.startVoiceRecording(SpeechRecognitionConstructor);
@@ -158,7 +160,7 @@ export class FeedbackFab {
       voiceButton.addEventListener("pointercancel", stopPointerRecording);
       voiceButton.addEventListener("lostpointercapture", stopPointerRecording);
       voiceButton.addEventListener("keydown", (event) => {
-        if ((event.key === " " || event.key === "Enter") && !event.repeat) { event.preventDefault(); this.startVoiceRecording(SpeechRecognitionConstructor); }
+        if ((event.key === " " || event.key === "Enter") && !event.repeat) { event.preventDefault(); this.root.querySelector(".entry")!.classList.add("open"); this.startVoiceRecording(SpeechRecognitionConstructor); }
       });
       voiceButton.addEventListener("keyup", (event) => {
         if (event.key === " " || event.key === "Enter") { event.preventDefault(); this.stopVoiceRecording(); }
@@ -177,6 +179,9 @@ export class FeedbackFab {
     const noteButton = this.root.querySelector<HTMLButtonElement>(".note-button")!;
     fabButton.disabled = true;
     noteButton.disabled = true;
+    // Hide the launcher before the card is shown. Both live in the fixed host,
+    // so leaving it visible during capture/upload makes it jump above the card.
+    launcher.classList.add("hidden");
     this.root.querySelector(".error")!.classList.remove("visible");
     try {
       const canvas = await html2canvas(this.options.capture?.() ?? document.documentElement, {
@@ -188,9 +193,8 @@ export class FeedbackFab {
       this.root.querySelector(".entry")!.classList.remove("open");
       this.setMessage("Sending screenshot…");
       await this.uploadScreenshot();
-      this.setMessage("Screenshot sent. Add a comment?");
+      this.setMessage("Add a comment?");
       noteButton.disabled = false;
-      launcher.classList.add("hidden");
     } catch (error) {
       this.options.onError?.(asError(error));
       this.setMessage("Could not send feedback. Try again.");

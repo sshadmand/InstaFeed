@@ -34,6 +34,7 @@ export declare class FeedbackFab {
     private readonly onOutsidePointer;
     private options;
     constructor(options: FeedbackFabOptions);
+    open(): void;
     destroy(): void;
     private render;
     private capture;
