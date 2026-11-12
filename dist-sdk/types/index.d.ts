@@ -1,7 +1,9 @@
 export interface FeedbackFabOptions {
     /** Base URL of the Feedback Fab API, e.g. https://feedback.example.com. */
     endpoint: string;
-    /** Optional app name shown in the reviewer inbox. */
+    /** Public project key from the InstaFeed dashboard. Safe to embed in a browser. */
+    projectKey: string;
+    /** Optional app label. The project name in the dashboard determines stored ownership. */
     appName?: string;
     /** Element to capture. Defaults to the visible document. */
     capture?: () => HTMLElement;
@@ -21,6 +23,7 @@ export declare class FeedbackFab {
     private root;
     private screenshot;
     private feedbackId;
+    private updateToken;
     private reaction;
     private hoverTimer;
     private capturing;
@@ -30,6 +33,7 @@ export declare class FeedbackFab {
     destroy(): void;
     private render;
     private capture;
+    private submissionUrl;
     private uploadScreenshot;
     private submit;
     private setMessage;

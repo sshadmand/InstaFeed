@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: instafeed
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: instafeed
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U instafeed"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app:
+    build:
+      context: .
+      args:
+        VITE_DEMO_PROJECT_KEY: ${VITE_DEMO_PROJECT_KEY:-}
+    ports:
+      - "127.0.0.1:${PORT:-3000}:3000"
+    environment:
+      # DATABASE_URL must use host `db` in Compose. URL-encode special password characters.
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL with hostname db in .env}
+      APP_URL: ${APP_URL:?Set APP_URL in .env}
+      REGISTRATION_MODE: ${REGISTRATION_MODE:-open}
+      FEEDBACK_ALLOWED_ORIGINS: ${FEEDBACK_ALLOWED_ORIGINS:-}
+      FEEDBACK_REVIEW_TOKEN: ${FEEDBACK_REVIEW_TOKEN:-}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  postgres:

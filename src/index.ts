@@ -3,7 +3,9 @@ import html2canvas from "html2canvas";
 export interface FeedbackFabOptions {
   /** Base URL of the Feedback Fab API, e.g. https://feedback.example.com. */
   endpoint: string;
-  /** Optional app name shown in the reviewer inbox. */
+  /** Public project key from the InstaFeed dashboard. Safe to embed in a browser. */
+  projectKey: string;
+  /** Optional app label. The project name in the dashboard determines stored ownership. */
   appName?: string;
   /** Element to capture. Defaults to the visible document. */
   capture?: () => HTMLElement;
@@ -69,6 +71,7 @@ export class FeedbackFab {
   private root: ShadowRoot;
   private screenshot: Blob | null = null;
   private feedbackId: string | null = null;
+  private updateToken: string | null = null;
   private reaction: FeedbackReaction = "up";
   private hoverTimer = 0;
   private capturing = false;
@@ -77,6 +80,7 @@ export class FeedbackFab {
 
   constructor(options: FeedbackFabOptions) {
     if (!options.endpoint) throw new Error("FeedbackFab requires an endpoint URL.");
+    if (!options.projectKey) throw new Error("FeedbackFab requires a public projectKey from the InstaFeed dashboard.");
     this.options = options;
     this.host = document.createElement("div");
     this.host.setAttribute("data-feedback-fab", "");
@@ -142,6 +146,12 @@ export class FeedbackFab {
     } finally { fabButton.disabled = false; this.capturing = false; }
   }
 
+  private submissionUrl() {
+    const url = new URL("/api/feedback", this.options.endpoint);
+    url.searchParams.set("projectKey", this.options.projectKey);
+    return url;
+  }
+
   private async uploadScreenshot() {
     if (!this.screenshot) return;
     const send = this.root.querySelector<HTMLButtonElement>(".send")!;
@@ -156,11 +166,12 @@ export class FeedbackFab {
     form.append("appName", this.options.appName ?? "");
     form.append("userAgent", navigator.userAgent);
     try {
-      const response = await fetch(new URL("/api/feedback", this.options.endpoint), { method: "POST", body: form });
+      const response = await fetch(this.submissionUrl(), { method: "POST", headers: { "X-InstaFeed-Project": this.options.projectKey }, body: form });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Feedback could not be submitted.");
       this.feedbackId = result.id;
-      this.options.onSubmitted?.({ ...result, reaction: this.reaction } as FeedbackReceipt);
+      this.updateToken = result.updateToken;
+      this.options.onSubmitted?.({ id: result.id, createdAt: result.createdAt, reaction: this.reaction });
       this.screenshot = null;
     } catch (cause) {
       const exception = asError(cause);
@@ -172,16 +183,16 @@ export class FeedbackFab {
   }
 
   private async submit() {
-    if (!this.feedbackId) return;
+    if (!this.feedbackId || !this.updateToken) return;
     const send = this.root.querySelector<HTMLButtonElement>(".send")!;
     const error = this.root.querySelector<HTMLDivElement>(".error")!;
     const comment = this.root.querySelector<HTMLTextAreaElement>("textarea")!.value.trim();
     if (!comment) { error.textContent = "Add a comment first."; error.classList.add("visible"); return; }
     send.disabled = true; error.classList.remove("visible");
     try {
-      const response = await fetch(new URL("/api/feedback", this.options.endpoint), {
-        method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: this.feedbackId, comment }),
+      const response = await fetch(this.submissionUrl(), {
+        method: "PATCH", headers: { "Content-Type": "application/json", "X-InstaFeed-Project": this.options.projectKey },
+        body: JSON.stringify({ id: this.feedbackId, updateToken: this.updateToken, comment }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Comment could not be saved.");
@@ -203,7 +214,7 @@ export class FeedbackFab {
     this.root.querySelector<HTMLButtonElement>(".fab")!.setAttribute("aria-expanded", String(choosing));
     this.root.querySelector(".choices")!.setAttribute("aria-hidden", String(!choosing));
   }
-  private reset() { this.root.querySelector(".card")!.classList.remove("visible"); this.root.querySelector(".entry")!.classList.remove("open"); this.root.querySelector<HTMLDivElement>(".launcher")!.classList.remove("hidden", "label-visible"); this.screenshot = null; this.feedbackId = null; }
+  private reset() { this.root.querySelector(".card")!.classList.remove("visible"); this.root.querySelector(".entry")!.classList.remove("open"); this.root.querySelector<HTMLDivElement>(".launcher")!.classList.remove("hidden", "label-visible"); this.screenshot = null; this.feedbackId = null; this.updateToken = null; }
 }
 
 function asError(error: unknown) { return error instanceof Error ? error : new Error(String(error)); }

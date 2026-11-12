@@ -22,3 +22,38 @@ input { width: min(360px, 50vw); padding: 10px; border: 1px solid #dedde8; borde
 .detail a { max-width: 100%; overflow: hidden; color: #6556e8; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .detail small { overflow: hidden; max-width: 100%; margin-top: 8px; color: #aaa9b5; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 620px) { .report { grid-template-columns: 1fr; }.report img { max-height: 220px; }.inbox { padding-top: 30px; } form { align-items: stretch; flex-direction: column; } input { width: 100%; } }
+[hidden] { display: none !important; }
+a { color: #6556e8; }
+.brand { display: flex; align-items: center; gap: 9px; font: 600 20px 'Space Grotesk', sans-serif; color: #202033; text-decoration: none; }
+.inbox { width: min(1360px, calc(100% - 40px)); padding: 28px 0; }
+#account { display: flex; align-items: center; gap: 14px; font-size: 12px; flex-wrap: wrap; }
+.workspace-heading { display: flex; justify-content: space-between; align-items: center; margin: 26px 0; }
+.welcome { width: min(430px, 100%); margin: 70px auto; padding: 32px; border: 1px solid #e8e8ef; border-radius: 16px; background: white; }
+.welcome p, details p, .empty { color: #717183; font-size: 13px; line-height: 1.6; }
+.welcome h1 { font-size: 30px; }
+.stack { display: flex; flex-direction: column; align-items: stretch; gap: 14px; margin: 20px 0; }
+label { display: flex; flex-direction: column; gap: 7px; }
+input, select, textarea { width: 100%; min-width: 0; border: 1px solid #dedde8; border-radius: 8px; padding: 11px; font: 13px 'DM Sans', sans-serif; background: #fff; color: #202033; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid #b6adff; outline-offset: 2px; }
+textarea[readonly] { font: 11px/1.7 'DM Mono', monospace; resize: vertical; }
+.filters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; }
+.layout > *, aside { min-width: 0; }
+details { padding: 18px; border: 1px solid #e8e8ef; background: white; border-radius: 12px; margin-bottom: 14px; }
+summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+h3 { font-size: 13px; margin: 6px 0 0; }
+pre { overflow-wrap: anywhere; white-space: pre-wrap; padding: 12px; background: #f5f4fc; border-radius: 8px; font: 10px/1.7 'DM Mono', monospace; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+.secondary { color: #6556e8; background: #efedff; }
+.link { background: transparent; color: #6556e8; padding: 4px 0; font-size: 12px; }
+button:disabled { opacity: .55; cursor: wait; }
+.empty { padding: 28px; text-align: center; border: 1px dashed #dedde8; border-radius: 12px; }
+ul { list-style: none; margin: 16px 0; padding: 0; }
+li { display: flex; justify-content: space-between; gap: 12px; align-items: center; overflow-wrap: anywhere; font-size: 12px; padding: 8px 0; color: #717183; }
+dialog { width: min(500px, calc(100% - 32px)); border: 1px solid #e8e8ef; border-radius: 16px; padding: 28px; color: #202033; }
+dialog::backdrop { background: #20203388; }
+dialog h2 { margin-top: 0; font: 600 23px 'Space Grotesk', sans-serif; }
+dialog p { font-size: 13px; line-height: 1.6; color: #717183; }
+.report > a { display: block; overflow: hidden; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } aside { order: -1; } .layout aside details:not([open]) { margin-bottom: 8px; } }
+@media (max-width: 620px) { .filters { grid-template-columns: 1fr; } header { align-items: start; } #account { justify-content: end; } .welcome { margin: 30px auto; padding: 22px; } }

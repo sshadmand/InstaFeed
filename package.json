@@ -1,6 +1,6 @@
 {
   "name": "@sshadmandco/instafeed",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Screenshot and comment feedback widget for web apps.",
   "homepage": "https://instafeed.chat",
   "repository": {
@@ -10,7 +10,13 @@
   "bugs": {
     "url": "https://github.com/sshadmand/InstaFeed/issues"
   },
-  "keywords": ["instafeed", "feedback", "visual feedback", "screenshot feedback", "testing"],
+  "keywords": [
+    "instafeed",
+    "feedback",
+    "visual feedback",
+    "screenshot feedback",
+    "testing"
+  ],
   "type": "module",
   "main": "./dist-sdk/feedback-fab.umd.cjs",
   "module": "./dist-sdk/feedback-fab.es.js",
@@ -23,20 +29,36 @@
     }
   },
   "license": "MIT",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
-  "files": ["dist-sdk", "README.md", "LICENSE", "brandmark.svg", "instafeed-logo.svg"],
+  "files": [
+    "dist-sdk",
+    "README.md",
+    "LICENSE",
+    "brandmark.svg",
+    "instafeed-logo.svg"
+  ],
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc -p tsconfig.json && vite build --config vite.sdk.config.ts && vite build --config vite.demo.config.ts",
-    "preview": "vite preview --host 0.0.0.0"
+    "build": "npm run check && vite build --config vite.sdk.config.ts && tsc -p tsconfig.json && vite build --config vite.demo.config.ts && tsc -p tsconfig.server.json && node scripts/copy-sdk.mjs",
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "tsc -p tsconfig.check.json",
+    "start": "node --env-file-if-exists=.env dist-server/server/start.js",
+    "dev:server": "tsx --env-file-if-exists=.env server/start.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "bootstrap-owner": "tsx --env-file-if-exists=.env server/bootstrap.ts",
+    "db:migrate": "node --env-file-if-exists=.env dist-server/server/migrate.js"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
-    "html2canvas": "^1.4.1"
+    "html2canvas": "^1.4.1",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "@types/node": "^22.15.30",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   }
